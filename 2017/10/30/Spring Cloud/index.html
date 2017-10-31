@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Spring Cloud特征： 分布式/版本化配置 服务注册和发现 路由 Service-to-service calls 负载均衡 Circuit Breakers 分布式消息传递  Cloud Native ApplicationsSpring Cloud Context and Spring Cloud Commons Spring Cloud Netflix vs. Spring Clou">
+<meta property="og:type" content="article">
+<meta property="og:title" content="崔俊">
+<meta property="og:url" content="http://yoursite.com/2017/10/30/Spring Cloud/index.html">
+<meta property="og:site_name" content="崔俊">
+<meta property="og:description" content="Spring Cloud特征： 分布式/版本化配置 服务注册和发现 路由 Service-to-service calls 负载均衡 Circuit Breakers 分布式消息传递  Cloud Native ApplicationsSpring Cloud Context and Spring Cloud Commons Spring Cloud Netflix vs. Spring Clou">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-30T12:59:59.200Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="崔俊">
+<meta name="twitter:description" content="Spring Cloud特征： 分布式/版本化配置 服务注册和发现 路由 Service-to-service calls 负载均衡 Circuit Breakers 分布式消息传递  Cloud Native ApplicationsSpring Cloud Context and Spring Cloud Commons Spring Cloud Netflix vs. Spring Clou">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/30/Spring Cloud/"/>
+
+
+
+
+
+  <title> | 崔俊</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">崔俊</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">大智若愚</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/30/Spring Cloud/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joofont">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="崔俊">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-30T20:59:59+08:00">
+                2017-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/30/Spring Cloud/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/10/30/Spring Cloud/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Spring-Cloud"><a href="#Spring-Cloud" class="headerlink" title="Spring Cloud"></a>Spring Cloud</h1><h4 id="特征："><a href="#特征：" class="headerlink" title="特征："></a>特征：</h4><ul>
+<li>分布式/版本化配置</li>
+<li>服务注册和发现</li>
+<li>路由</li>
+<li>Service-to-service calls</li>
+<li>负载均衡</li>
+<li>Circuit Breakers</li>
+<li>分布式消息传递</li>
+</ul>
+<h4 id="Cloud-Native-Applications"><a href="#Cloud-Native-Applications" class="headerlink" title="Cloud Native Applications"></a>Cloud Native Applications</h4><p>Spring Cloud Context and Spring Cloud Commons</p>
+<p>Spring Cloud Netflix vs. Spring Cloud Consul</p>
+<h4 id="Spring-Cloud-Context-Application-Context-Services"><a href="#Spring-Cloud-Context-Application-Context-Services" class="headerlink" title="Spring Cloud Context: Application Context Services"></a>Spring Cloud Context: Application Context Services</h4><p>通过上下文控制应用可插拔<br>application.yml or .properties or bootstrap.yml</p>
+<p>禁用远程配置覆盖项目配置：<br>spring.cloud.config.allowOverride=true</p>
+<p>spring.cloud.config.overrideNone=true<br>spring.cloud.config.overrideSystemProperties=false</p>
+<p>@Beans @Order</p>
+<p>@ConfigurationProperties<br>@RefreshScope</p>
+<p>@RefreshScope<br>@Configuration</p>
+<h4 id="加密和解密"><a href="#加密和解密" class="headerlink" title="加密和解密"></a>加密和解密</h4><h4 id="Common-Abstractions"><a href="#Common-Abstractions" class="headerlink" title="Common Abstractions"></a>Common Abstractions</h4><p>@Bean and @LoadBalanced</p>
+<p>spring.cloud.loadbalancer.retry=true</p>
+<p>client.ribbon.MaxAutoRetries client.ribbon.MaxAutoRetriesNextServer<br>client.ribbon.OkToRetryOnAllOperations</p>
+<p>@Primary @Autowired</p>
+<blockquote>
+<p>If you see errors like java.lang.IllegalArgumentException: Can not set org.springframework.web.client.RestTemplate field com.my.app.Foo.restTemplate to com.sun.proxy.$Proxy89 try injecting RestOperations instead or setting spring.aop.proxyTargetClass=true.</p>
+</blockquote>
+<h4 id="忽略接口"><a href="#忽略接口" class="headerlink" title="忽略接口"></a>忽略接口</h4><ul>
+<li>spring:<br>cloud:<br>  inetutils:<pre><code>ignoredInterfaces:
+  - docker0
+  - veth.*
+</code></pre></li>
+<li>spring:<br>cloud:<br>  inetutils:<pre><code>preferredNetworks:
+  - 192.168
+  - 10.0
+</code></pre></li>
+<li>spring:<br>cloud:<br>  inetutils:<pre><code>useOnlySiteLocalInterfaces: true
+</code></pre></li>
+</ul>
+<h4 id="Spring-Cloud-配置"><a href="#Spring-Cloud-配置" class="headerlink" title="Spring Cloud 配置"></a>Spring Cloud 配置</h4><p>The HTTP service has resources in the form:</p>
+<p>/{application}/{profile}[/{label}]<br>/{application}-{profile}.yml<br>/{label}/{application}-{profile}.yml<br>/{application}-{profile}.properties<br>/{label}/{application}-{profile}.properties</p>
+<p>Spring Cloud Config Server pulls configuration for remote clients from a git repository (which must be provided):</p>
+<p>spring:<br>  cloud:<br>    config:<br>      server:<br>        git:<br>          uri: <a href="https://github.com/spring-cloud-samples/config-repo" target="_blank" rel="external">https://github.com/spring-cloud-samples/config-repo</a></p>
+<h4 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h4><blockquote>
+<parent><br>       <groupid>org.springframework.boot</groupid><br>       <artifactid>spring-boot-starter-parent</artifactid><br>       <version>1.3.5.RELEASE</version><br>       <relativepath> <!-- lookup parent from repository --><br>   </relativepath></parent>
+
+<dependencymanagement><br>    <dependencies><br>        <dependency><br>            <groupid>org.springframework.cloud</groupid><br>            <artifactid>spring-cloud-dependencies</artifactid><br>            <version>Brixton.RELEASE</version><br>            <type>pom</type><br>            <scope>import</scope><br>        </dependency><br>    </dependencies><br></dependencymanagement>
+
+<dependencies><br>    <dependency><br>        <groupid>org.springframework.cloud</groupid><br>        <artifactid>spring-cloud-starter-config</artifactid><br>    </dependency><br>    <dependency><br>        <groupid>org.springframework.boot</groupid><br>        <artifactid>spring-boot-starter-test</artifactid><br>        <scope>test</scope><br>    </dependency><br></dependencies>
+
+<build><br>    <plugins><br>           <plugin><br>               <groupid>org.springframework.boot</groupid><br>               <artifactid>spring-boot-maven-plugin</artifactid><br>           </plugin><br>    </plugins><br></build>
+
+
+</blockquote>
+<p>@SpringBootApplication<br>@RestController<br>public class Application {</p>
+<pre><code>@RequestMapping(&quot;/&quot;)
+public String home() {
+    return &quot;Hello World!&quot;;
+}
+
+public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+}
+</code></pre><p>}</p>
+<p>可以更改服务器配置<br>spring.cloud.config.uri: <a href="http://myconfigserver.com" target="_blank" rel="external">http://myconfigserver.com</a></p>
+<p>默认属性将高优先级属性显示在/env 上</p>
+<p>The server is easily embeddable in a Spring Boot application using the @EnableConfigServer annotation</p>
+<p>ConfigServer.java</p>
+<blockquote>
+<p>@SpringBootApplication<br>@EnableConfigServer<br>public class ConfigServer {<br>  public static void main(String[] args) {<br>    SpringApplication.run(ConfigServer.class, args);<br>  }<br>}</p>
+</blockquote>
+<p>spring.config.name=configserver<br>or<br>server.port: 8888<br>spring.cloud.config.server.git.uri: file://${user.home}/config-repo</p>
+<p>creating the git repository</p>
+<blockquote>
+<p>$ cd $HOME<br>$ mkdir config-repo<br>$ cd config-repo<br>$ git init .<br>$ echo info.foo: bar &gt; application.properties<br>$ git add -A .<br>$ git commit -m “Add application.properties”</p>
+</blockquote>
+<p>配置文件优先级：<br>active profiles &gt; defaults<br>多个配置文件，最后一个胜出</p>
+<p>{application} and {profile} and {label}</p>
+<blockquote>
+<p>clones remote repositories at startup<br>spring:<br>  cloud:<br>    config:<br>      server:<br>        git:<br>          uri: <a href="https://git/common/config-repo.git" target="_blank" rel="external">https://git/common/config-repo.git</a><br>          repos:<br>            team-a:<br>                pattern: team-a-<em><br>                cloneOnStart: true<br>                uri: <a href="http://git/team-a/config-repo.git" target="_blank" rel="external">http://git/team-a/config-repo.git</a><br>            team-b:<br>                pattern: team-b-</em><br>                cloneOnStart: false<br>                uri: <a href="http://git/team-b/config-repo.git" target="_blank" rel="external">http://git/team-b/config-repo.git</a><br>            team-c:<br>                pattern: team-c-*<br>                uri: <a href="http://git/team-a/config-repo.git" target="_blank" rel="external">http://git/team-a/config-repo.git</a></p>
+</blockquote>
+<p>To use the native profile just launch the Config Server with “spring.profiles.active=native</p>
+<p>spring.profiles.active=vault<br>spring.cloud.config.server.vault.~</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>host</td>
+<td>127.0.0.1</td>
+</tr>
+<tr>
+<td>port</td>
+<td>8200</td>
+</tr>
+<tr>
+<td>scheme</td>
+<td>http</td>
+</tr>
+<tr>
+<td>backend</td>
+<td>secret</td>
+</tr>
+<tr>
+<td>defaultKey</td>
+<td>application</td>
+</tr>
+<tr>
+<td>profileSeparator</td>
+<td>,</td>
+</tr>
+</tbody>
+</table>
+<p>vault write secret/application foo=bar baz=bam</p>
+<blockquote>
+<p>When myApp has the dev profile enabled than properties written to all of the above paths would be available to it, with properties in the first path in the list taking priority over the others.</p>
+</blockquote>
+<p>spring.cloud.config.overrideNone=true (default is false)<br>spring.cloud.config.server.health.enabled=false.</p>
+<p>加密值不能用引号括起来，不然不会解密该值：</p>
+<blockquote>
+<p>application.yml<br>spring:<br>  datasource:<br>    username: dbuser<br>    password: ‘{cipher}FKSAJDFGYOS8F7GLHAKERGFHLSAJ’</p>
+<p>application.properties<br>spring.datasource.username: dbuser<br>spring.datasource.password: {cipher}FKSAJDFGYOS8F7GLHAKERGFHLSAJ</p>
+</blockquote>
+<p>spring -&gt; spring booot &gt; Spring Cloud</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2017/10/30/Spring Cloud/"
+           data-title="" data-url="http://yoursite.com/2017/10/30/Spring Cloud/">
+      </div>
+    </div>
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Joofont</p>
+              <p class="site-description motion-element" itemprop="description">大智若愚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Cloud"><span class="nav-number">1.</span> <span class="nav-text">Spring Cloud</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特征："><span class="nav-number">1.0.0.1.</span> <span class="nav-text">特征：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cloud-Native-Applications"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">Cloud Native Applications</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Cloud-Context-Application-Context-Services"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">Spring Cloud Context: Application Context Services</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加密和解密"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">加密和解密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Common-Abstractions"><span class="nav-number">1.0.0.5.</span> <span class="nav-text">Common Abstractions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#忽略接口"><span class="nav-number">1.0.0.6.</span> <span class="nav-text">忽略接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Cloud-配置"><span class="nav-number">1.0.0.7.</span> <span class="nav-text">Spring Cloud 配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pom-xml"><span class="nav-number">1.0.0.8.</span> <span class="nav-text">pom.xml</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Joofont</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"joofont"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
