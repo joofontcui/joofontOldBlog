@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="//www.joofont.com">
-  <title>崔俊的博客</title>
+  <title>Svn搭建 | 崔俊的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="nexus搭建：（/mnt/nexus）（/mnt/nexus/sonatype-work/nexus/storage）  linux切换用户——nexus服务器端——配置本地maven——配置项目pom文件  http://www.cnblogs.com/quanyongan/archive/2013/04/24/3037589.htmlhttps://segmentfault.com/a/11">
+  <meta name="description" content="svn端口：3690httpd端口：8888 svn仓库：/opt/svn_repos/medeen/confhttpd：/etc/httpd svn搭建：http://blog.csdn.net/wenwenxiong/article/details/76590693http://www.api456.com/14937767895625.htmlhttp://ifonk.com/blog/1">
 <meta name="keywords" content="开发者,程序猿编程,代码">
 <meta property="og:type" content="article">
-<meta property="og:title" content="崔俊的博客">
-<meta property="og:url" content="//www.joofont.com/2017/11/01/Nexus/index.html">
+<meta property="og:title" content="Svn搭建">
+<meta property="og:url" content="//www.joofont.com/2017/10/28/Svn/index.html">
 <meta property="og:site_name" content="崔俊的博客">
-<meta property="og:description" content="nexus搭建：（/mnt/nexus）（/mnt/nexus/sonatype-work/nexus/storage）  linux切换用户——nexus服务器端——配置本地maven——配置项目pom文件  http://www.cnblogs.com/quanyongan/archive/2013/04/24/3037589.htmlhttps://segmentfault.com/a/11">
-<meta property="og:updated_time" content="2017-10-31T15:07:29.100Z">
+<meta property="og:description" content="svn端口：3690httpd端口：8888 svn仓库：/opt/svn_repos/medeen/confhttpd：/etc/httpd svn搭建：http://blog.csdn.net/wenwenxiong/article/details/76590693http://www.api456.com/14937767895625.htmlhttp://ifonk.com/blog/1">
+<meta property="og:updated_time" content="2017-11-01T14:39:57.815Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="崔俊的博客">
-<meta name="twitter:description" content="nexus搭建：（/mnt/nexus）（/mnt/nexus/sonatype-work/nexus/storage）  linux切换用户——nexus服务器端——配置本地maven——配置项目pom文件  http://www.cnblogs.com/quanyongan/archive/2013/04/24/3037589.htmlhttps://segmentfault.com/a/11">
+<meta name="twitter:title" content="Svn搭建">
+<meta name="twitter:description" content="svn端口：3690httpd端口：8888 svn仓库：/opt/svn_repos/medeen/confhttpd：/etc/httpd svn搭建：http://blog.csdn.net/wenwenxiong/article/details/76590693http://www.api456.com/14937767895625.htmlhttp://ifonk.com/blog/1">
   
     <link rel="alternative" href="/atom.xml" title="崔俊的博客" type="application/atom+xml">
   
@@ -174,20 +174,31 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Nexus" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Svn" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Svn搭建
+    </h1>
+  
+
+        
+        <a href="/2017/10/28/Svn/" class="archive-article-date">
+  	<time datetime="2017-10-28T13:16:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-28</time>
+</a>
+        
+      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>nexus搭建：（/mnt/nexus）（/mnt/nexus/sonatype-work/nexus/storage）</p>
-<blockquote>
-<p>linux切换用户——nexus服务器端——配置本地maven——配置项目pom文件</p>
-</blockquote>
-<p><a href="http://www.cnblogs.com/quanyongan/archive/2013/04/24/3037589.html" target="_blank" rel="external">http://www.cnblogs.com/quanyongan/archive/2013/04/24/3037589.html</a><br><a href="https://segmentfault.com/a/1190000009467582" target="_blank" rel="external">https://segmentfault.com/a/1190000009467582</a><br><a href="http://blog.csdn.net/johnstrive/article/details/49894195" target="_blank" rel="external">http://blog.csdn.net/johnstrive/article/details/49894195</a><br><a href="http://www.jianshu.com/p/5effe321bff1" target="_blank" rel="external">http://www.jianshu.com/p/5effe321bff1</a><br><a href="http://www.cnblogs.com/dreamroute/p/5440419.html" target="_blank" rel="external">http://www.cnblogs.com/dreamroute/p/5440419.html</a><br><a href="https://my.oschina.net/thinwonton/blog/879685" target="_blank" rel="external">https://my.oschina.net/thinwonton/blog/879685</a></p>
-<p>上传jar到nexus：<a href="https://my.oschina.net/u/2472104/blog/650122" target="_blank" rel="external">https://my.oschina.net/u/2472104/blog/650122</a></p>
-<blockquote>
-<p>nexus会默认创建如下几种Repository：</p>
-<p>1、Public Repositories, 这是一个Repository Group，该Repository Group包含了多个Repository，其中包含了Releases、Snapshots、ThirdParty和Central。<br>2、3rd party，该Repository即是存放你公司所购买的第三方软件库的地方，它是一个由Nexus自己维护的一个Repository。<br>3、Apache Snapshots，这是一个代理Repository，即最终的依赖还是得在Apache官网上去下载，然后缓存在Nexus中。<br>4、Central，这就是代理Maven Central Repository的Repository。<br>5、Releases，你自己的项目要发布时，就应该发布在这个Repository，他也是Nexus自己维护的Repository，而不是代理。<br>6、Snapshots，你自己项目Snapshot的Repository。</p>
+        <blockquote>
+<p>svn端口：3690<br>httpd端口：8888</p>
+<p>svn仓库：<br>/opt/svn_repos/medeen/conf<br>httpd：<br>/etc/httpd</p>
+<p>svn<br>搭建：<br><a href="http://blog.csdn.net/wenwenxiong/article/details/76590693" target="_blank" rel="external">http://blog.csdn.net/wenwenxiong/article/details/76590693</a><br><a href="http://www.api456.com/14937767895625.html" target="_blank" rel="external">http://www.api456.com/14937767895625.html</a><br><a href="http://ifonk.com/blog/14.html" target="_blank" rel="external">http://ifonk.com/blog/14.html</a><br><a href="http://www.jusene.me/2017/06/18/svnserv/" target="_blank" rel="external">http://www.jusene.me/2017/06/18/svnserv/</a><br><a href="http://www.linuxidc.com/Linux/2017-05/144288.htm" target="_blank" rel="external">http://www.linuxidc.com/Linux/2017-05/144288.htm</a><br><a href="https://segmentfault.com/a/1190000000522241" target="_blank" rel="external">https://segmentfault.com/a/1190000000522241</a></p>
+<p>解决问题：<br><a href="http://www.linuxidc.com/Linux/2011-06/37279p2.htm" target="_blank" rel="external">http://www.linuxidc.com/Linux/2011-06/37279p2.htm</a></p>
 </blockquote>
 
       
@@ -268,7 +279,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://www.joofont.com/2017/11/01/Nexus/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://www.joofont.com/2017/10/28/Svn/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -282,20 +293,15 @@ var _hmt = _hmt || [];
   
 <nav id="article-nav">
   
-    <a href="/2017/11/01/Svn/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/10/30/Spring Cloud/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          (no title)
+          Spring Cloud笔记
         
       </div>
     </a>
   
-  
-    <a href="/2017/11/01/Spring Cloud/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title"></div>
-      <i class="icon-circle-right"></i>
-    </a>
   
 </nav>
 
@@ -336,7 +342,7 @@ var _hmt = _hmt || [];
   
 
   
-  <div id="SOHUCS" sid="Nexus" ></div> 
+  <div id="SOHUCS" sid="Svn" ></div> 
 <script type="text/javascript"> 
 window.YiliaChangyanWrap = function() {
     var appid = "true"; 
