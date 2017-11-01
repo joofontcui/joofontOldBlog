@@ -189,123 +189,9 @@ var _hmt = _hmt || [];
 <li>Circuit Breakers</li>
 <li>分布式消息传递</li>
 </ul>
-<h4 id="Cloud-Native-Applications"><a href="#Cloud-Native-Applications" class="headerlink" title="Cloud Native Applications"></a>Cloud Native Applications</h4><p>Spring Cloud Context and Spring Cloud Commons</p>
-<p>Spring Cloud Netflix vs. Spring Cloud Consul</p>
-<h4 id="Spring-Cloud-Context-Application-Context-Services"><a href="#Spring-Cloud-Context-Application-Context-Services" class="headerlink" title="Spring Cloud Context: Application Context Services"></a>Spring Cloud Context: Application Context Services</h4><p>通过上下文控制应用可插拔<br>application.yml or .properties or bootstrap.yml</p>
-<p>禁用远程配置覆盖项目配置：<br>spring.cloud.config.allowOverride=true</p>
-<p>spring.cloud.config.overrideNone=true<br>spring.cloud.config.overrideSystemProperties=false</p>
-<p>@Beans @Order</p>
-<p>@ConfigurationProperties<br>@RefreshScope</p>
-<p>@RefreshScope<br>@Configuration</p>
-<h4 id="加密和解密"><a href="#加密和解密" class="headerlink" title="加密和解密"></a>加密和解密</h4><h4 id="Common-Abstractions"><a href="#Common-Abstractions" class="headerlink" title="Common Abstractions"></a>Common Abstractions</h4><p>@Bean and @LoadBalanced</p>
-<p>spring.cloud.loadbalancer.retry=true</p>
-<p>client.ribbon.MaxAutoRetries client.ribbon.MaxAutoRetriesNextServer<br>client.ribbon.OkToRetryOnAllOperations</p>
-<p>@Primary @Autowired</p>
-<blockquote>
-<p>If you see errors like java.lang.IllegalArgumentException: Can not set org.springframework.web.client.RestTemplate field com.my.app.Foo.restTemplate to com.sun.proxy.$Proxy89 try injecting RestOperations instead or setting spring.aop.proxyTargetClass=true.</p>
-</blockquote>
-<h4 id="忽略接口"><a href="#忽略接口" class="headerlink" title="忽略接口"></a>忽略接口</h4><ul>
-<li>spring:<br>cloud:<br>  inetutils:<pre><code>ignoredInterfaces:
-  - docker0
-  - veth.*
-</code></pre></li>
-<li>spring:<br>cloud:<br>  inetutils:<pre><code>preferredNetworks:
-  - 192.168
-  - 10.0
-</code></pre></li>
-<li>spring:<br>cloud:<br>  inetutils:<pre><code>useOnlySiteLocalInterfaces: true
-</code></pre></li>
-</ul>
-<h4 id="Spring-Cloud-配置"><a href="#Spring-Cloud-配置" class="headerlink" title="Spring Cloud 配置"></a>Spring Cloud 配置</h4><p>The HTTP service has resources in the form:</p>
-<p>/{application}/{profile}[/{label}]<br>/{application}-{profile}.yml<br>/{label}/{application}-{profile}.yml<br>/{application}-{profile}.properties<br>/{label}/{application}-{profile}.properties</p>
-<p>Spring Cloud Config Server pulls configuration for remote clients from a git repository (which must be provided):</p>
-<p>spring:<br>  cloud:<br>    config:<br>      server:<br>        git:<br>          uri: <a href="https://github.com/spring-cloud-samples/config-repo" target="_blank" rel="external">https://github.com/spring-cloud-samples/config-repo</a></p>
-<h4 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h4><blockquote>
-<parent><br>       <groupid>org.springframework.boot</groupid><br>       <artifactid>spring-boot-starter-parent</artifactid><br>       <version>1.3.5.RELEASE</version><br>       <relativepath> <!-- lookup parent from repository --><br>   </relativepath></parent>
-
-<dependencymanagement><br>    <dependencies><br>        <dependency><br>            <groupid>org.springframework.cloud</groupid><br>            <artifactid>spring-cloud-dependencies</artifactid><br>            <version>Brixton.RELEASE</version><br>            <type>pom</type><br>            <scope>import</scope><br>        </dependency><br>    </dependencies><br></dependencymanagement>
-
-<dependencies><br>    <dependency><br>        <groupid>org.springframework.cloud</groupid><br>        <artifactid>spring-cloud-starter-config</artifactid><br>    </dependency><br>    <dependency><br>        <groupid>org.springframework.boot</groupid><br>        <artifactid>spring-boot-starter-test</artifactid><br>        <scope>test</scope><br>    </dependency><br></dependencies>
-
-<build><br>    <plugins><br>           <plugin><br>               <groupid>org.springframework.boot</groupid><br>               <artifactid>spring-boot-maven-plugin</artifactid><br>           </plugin><br>    </plugins><br></build>
-
-
-</blockquote>
-<p>@SpringBootApplication<br>@RestController<br>public class Application {</p>
-<pre><code>@RequestMapping(&quot;/&quot;)
-public String home() {
-    return &quot;Hello World!&quot;;
-}
-
-public static void main(String[] args) {
-    SpringApplication.run(Application.class, args);
-}
-</code></pre><p>}</p>
-<p>可以更改服务器配置<br>spring.cloud.config.uri: <a href="http://myconfigserver.com" target="_blank" rel="external">http://myconfigserver.com</a></p>
-<p>默认属性将高优先级属性显示在/env 上</p>
-<p>The server is easily embeddable in a Spring Boot application using the @EnableConfigServer annotation</p>
-<p>ConfigServer.java</p>
-<blockquote>
-<p>@SpringBootApplication<br>@EnableConfigServer<br>public class ConfigServer {<br>  public static void main(String[] args) {<br>    SpringApplication.run(ConfigServer.class, args);<br>  }<br>}</p>
-</blockquote>
-<p>spring.config.name=configserver<br>or<br>server.port: 8888<br>spring.cloud.config.server.git.uri: file://${user.home}/config-repo</p>
-<p>creating the git repository</p>
-<blockquote>
-<p>$ cd $HOME<br>$ mkdir config-repo<br>$ cd config-repo<br>$ git init .<br>$ echo info.foo: bar &gt; application.properties<br>$ git add -A .<br>$ git commit -m “Add application.properties”</p>
-</blockquote>
-<p>配置文件优先级：<br>active profiles &gt; defaults<br>多个配置文件，最后一个胜出</p>
-<p>{application} and {profile} and {label}</p>
-<blockquote>
-<p>clones remote repositories at startup<br>spring:<br>  cloud:<br>    config:<br>      server:<br>        git:<br>          uri: <a href="https://git/common/config-repo.git" target="_blank" rel="external">https://git/common/config-repo.git</a><br>          repos:<br>            team-a:<br>                pattern: team-a-<em><br>                cloneOnStart: true<br>                uri: <a href="http://git/team-a/config-repo.git" target="_blank" rel="external">http://git/team-a/config-repo.git</a><br>            team-b:<br>                pattern: team-b-</em><br>                cloneOnStart: false<br>                uri: <a href="http://git/team-b/config-repo.git" target="_blank" rel="external">http://git/team-b/config-repo.git</a><br>            team-c:<br>                pattern: team-c-*<br>                uri: <a href="http://git/team-a/config-repo.git" target="_blank" rel="external">http://git/team-a/config-repo.git</a></p>
-</blockquote>
-<p>To use the native profile just launch the Config Server with “spring.profiles.active=native</p>
-<p>spring.profiles.active=vault<br>spring.cloud.config.server.vault.~</p>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>Default Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>host</td>
-<td>127.0.0.1</td>
-</tr>
-<tr>
-<td>port</td>
-<td>8200</td>
-</tr>
-<tr>
-<td>scheme</td>
-<td>http</td>
-</tr>
-<tr>
-<td>backend</td>
-<td>secret</td>
-</tr>
-<tr>
-<td>defaultKey</td>
-<td>application</td>
-</tr>
-<tr>
-<td>profileSeparator</td>
-<td>,</td>
-</tr>
-</tbody>
-</table>
-<p>vault write secret/application foo=bar baz=bam</p>
-<blockquote>
-<p>When myApp has the dev profile enabled than properties written to all of the above paths would be available to it, with properties in the first path in the list taking priority over the others.</p>
-</blockquote>
-<p>spring.cloud.config.overrideNone=true (default is false)<br>spring.cloud.config.server.health.enabled=false.</p>
-<p>加密值不能用引号括起来，不然不会解密该值：</p>
-<blockquote>
-<p>application.yml<br>spring:<br>  datasource:<br>    username: dbuser<br>    password: ‘{cipher}FKSAJDFGYOS8F7GLHAKERGFHLSAJ’</p>
-<p>application.properties<br>spring.datasource.username: dbuser<br>spring.datasource.password: {cipher}FKSAJDFGYOS8F7GLHAKERGFHLSAJ</p>
-</blockquote>
-<p>spring -&gt; spring booot &gt; Spring Cloud</p>
-
+        
+          <a class="article-more-a" href="/2017/11/01/Spring Cloud/#more">more >></a>
+        
       
 
       
@@ -317,7 +203,7 @@ public static void main(String[] args) {
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/30/Spring Cloud/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/11/01/Spring Cloud/">展开全文 >></a>
         </p>
       
 
