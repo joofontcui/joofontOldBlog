@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="//www.joofont.com">
   <title>禅道搭建 | 崔俊的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="官网下载安装包：http://www.zentao.net/download.html  将安装包直接解压到/opt目录下，不要解压到别的目录再拷贝到/opt/，因为这样会导致文件的所有者和读写权限改变，也不要解压后把整个目录777权限。可以使用命令： tar -zxvf  ZenTaoPMS.7.3.stable.zbox_32.tar.gz -C /opt">
+  <meta name="description" content="官网下载安装包：http://www.zentao.net/download.html 1.将安装包直接解压到/opt目录下，不要解压到别的目录再拷贝到/opt/，因为这样会导致文件的所有者和读写权限改变，也不要解压后把整个目录777权限。   可以使用命令： tar -zxvf  ZenTaoPMS.7.3.stable.zbox_32.tar.gz -C /opt">
 <meta name="keywords" content="工具搭建,项目管理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="禅道搭建">
 <meta property="og:url" content="//www.joofont.com/2017/11/01/Chandao/index.html">
 <meta property="og:site_name" content="崔俊的博客">
-<meta property="og:description" content="官网下载安装包：http://www.zentao.net/download.html  将安装包直接解压到/opt目录下，不要解压到别的目录再拷贝到/opt/，因为这样会导致文件的所有者和读写权限改变，也不要解压后把整个目录777权限。可以使用命令： tar -zxvf  ZenTaoPMS.7.3.stable.zbox_32.tar.gz -C /opt">
-<meta property="og:updated_time" content="2017-11-05T08:31:50.397Z">
+<meta property="og:description" content="官网下载安装包：http://www.zentao.net/download.html 1.将安装包直接解压到/opt目录下，不要解压到别的目录再拷贝到/opt/，因为这样会导致文件的所有者和读写权限改变，也不要解压后把整个目录777权限。   可以使用命令： tar -zxvf  ZenTaoPMS.7.3.stable.zbox_32.tar.gz -C /opt">
+<meta property="og:updated_time" content="2017-11-05T09:28:32.900Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="禅道搭建">
-<meta name="twitter:description" content="官网下载安装包：http://www.zentao.net/download.html  将安装包直接解压到/opt目录下，不要解压到别的目录再拷贝到/opt/，因为这样会导致文件的所有者和读写权限改变，也不要解压后把整个目录777权限。可以使用命令： tar -zxvf  ZenTaoPMS.7.3.stable.zbox_32.tar.gz -C /opt">
+<meta name="twitter:description" content="官网下载安装包：http://www.zentao.net/download.html 1.将安装包直接解压到/opt目录下，不要解压到别的目录再拷贝到/opt/，因为这样会导致文件的所有者和读写权限改变，也不要解压后把整个目录777权限。   可以使用命令： tar -zxvf  ZenTaoPMS.7.3.stable.zbox_32.tar.gz -C /opt">
   
     <link rel="alternative" href="/atom.xml" title="崔俊的博客" type="application/atom+xml">
   
@@ -195,21 +195,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <p>官网下载安装包：<a href="http://www.zentao.net/download.html" target="_blank" rel="external">http://www.zentao.net/download.html</a></p>
-<ol>
-<li><p>将安装包直接解压到/opt目录下，不要解压到别的目录再拷贝到/opt/，因为这样会导致文件的所有者和读写权限改变，也不要解压后把整个目录777权限。<br>可以使用命令： tar -zxvf  ZenTaoPMS.7.3.stable.zbox_32.tar.gz -C /opt</p>
-<a id="more"></a>
-</li>
-<li><p>执行/opt/zbox/zbox start 命令开启Apache和Mysql。<br>  执行/opt/zbox/zbox stop 命令停止Apache和Mysql。<br>  执行/opt/zbox/zbox restart 命令重启Apache和Mysql。<br>  可以使用/opt/zbox/zbox -h命令来获取关于zbox命令的帮助<br>  其中 -ap参数 可以修改Apache的端口，-mp参数 可以修改Mysql的端口（比如：/opt/zbox/zbox -ap 8080）</p>
-</li>
-<li><p>浏览器访问 <a href="http://ip:apache端口" target="_blank" rel="external">http://ip:apache端口</a> (默认帐号 admin，密码 123456)</p>
-</li>
-<li><p>修改linux上的mysql端口 –&gt;<br>先停止禅道的服务，然后执行 /opt/zbox/zbox -mp 3307 修改端口  然后启动禅道服务试试。</p>
-</li>
-<li><p>系   统：默认选择MySQL。<br>服务器：127.0.0.1:mysql端口 ，我在前面开启服务时，mysql端口启用的是3307。那么就填写127.0.0.1:3307。<br>用户名： root。（禅道默认的数据库用户名是root）<br>密   码：123456。（禅道默认的数据库密码是123456）<br>数据库：zentao。</p>
-</li>
-<li><p>命令行连接数据库。登录数据库：/opt/zbox/bin/mysql -u root -P mysql端口 -p  （比如：/opt/zbox/bin/mysql -u root -P 3306 -p）<br>导入数据库：/opt/zbox/bin/mysql -u root -P mysql端口 -p 要导入的库名 &lt; XXXX.sql （比如：/opt/zbox/bin/mysql -u root -P 3306 -p zentao &lt; zentao.sql）</p>
-</li>
-</ol>
+<p>1.将安装包直接解压到/opt目录下，不要解压到别的目录再拷贝到/opt/，因为这样会导致文件的所有者和读写权限改变，也不要解压后把整个目录777权限。<br>   可以使用命令： tar -zxvf  ZenTaoPMS.7.3.stable.zbox_32.tar.gz -C /opt<br>   <a id="more"></a><br>2.执行/opt/zbox/zbox start 命令开启Apache和Mysql。<br>   执行/opt/zbox/zbox stop 命令停止Apache和Mysql。<br>   执行/opt/zbox/zbox restart 命令重启Apache和Mysql。<br>   可以使用/opt/zbox/zbox -h命令来获取关于zbox命令的帮助<br>   其中 -ap参数 可以修改Apache的端口，-mp参数 可以修改Mysql的端口（比如：/opt/zbox/zbox -ap 8080）<br>3.浏览器访问 <a href="http://ip:apache端口" target="_blank" rel="external">http://ip:apache端口</a> (默认帐号 admin，密码 123456)<br>4.修改linux上的mysql端口 –&gt;<br>   先停止禅道的服务，然后执行 /opt/zbox/zbox -mp 3307 修改端口  然后启动禅道服务试试。<br>5.系   统：默认选择MySQL。<br>   服务器：127.0.0.1:mysql端口 ，我在前面开启服务时，mysql端口启用的是3307。那么就填写127.0.0.1:3307。<br>   用户名： root。（禅道默认的数据库用户名是root）<br>   密   码：123456。（禅道默认的数据库密码是123456）<br>   数据库：zentao。<br>6.命令行连接数据库。登录数据库：/opt/zbox/bin/mysql -u root -P mysql端口 -p  （比如：/opt/zbox/bin/mysql -u root -P 3306 -p）<br>   导入数据库：/opt/zbox/bin/mysql -u root -P mysql端口 -p 要导入的库名 &lt; XXXX.sql （比如：/opt/zbox/bin/mysql -u root -P 3306 -p zentao &lt; zentao.sql）</p>
 
       
 
