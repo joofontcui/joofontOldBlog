@@ -9,7 +9,7 @@
   <title>Nexus搭建 | 崔俊的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="概念Nexus 是Maven仓库管理器，如果你使用Maven，你可以从Maven中央仓库 下载所需要的构件（artifact），但这通常不是一个好的做法，你应该在本地架设一个Maven仓库服务器，在代理远程仓库的同时维护本地仓库，以节省带宽和时间，Nexus就可以满足这样的需要。此外，他还提供了强大的仓库管理功能，构件搜索功能，它基于REST，友好的UI是一个extjs的REST客户端，它占用较少">
-<meta name="keywords" content="工具搭建  项目管理  Maven">
+<meta name="keywords" content="工具搭建,项目管理,Maven">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nexus搭建">
 <meta property="og:url" content="//www.joofont.com/2017/10/31/Nexus/index.html">
@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://oysmxnph6.bkt.clouddn.com/nexus%E7%95%8C%E9%9D%A2.jpg">
 <meta property="og:image" content="http://oysmxnph6.bkt.clouddn.com/nexus%20%E8%AE%BE%E7%BD%AE%E4%B8%AD%E5%A4%AE%E4%BB%93%E5%BA%93.jpg">
 <meta property="og:image" content="http://oysmxnph6.bkt.clouddn.com/nexus%20public%E4%BB%93%E5%BA%93.jpg">
-<meta property="og:updated_time" content="2017-11-05T07:40:31.353Z">
+<meta property="og:updated_time" content="2017-11-05T07:48:39.343Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nexus搭建">
 <meta name="twitter:description" content="概念Nexus 是Maven仓库管理器，如果你使用Maven，你可以从Maven中央仓库 下载所需要的构件（artifact），但这通常不是一个好的做法，你应该在本地架设一个Maven仓库服务器，在代理远程仓库的同时维护本地仓库，以节省带宽和时间，Nexus就可以满足这样的需要。此外，他还提供了强大的仓库管理功能，构件搜索功能，它基于REST，友好的UI是一个extjs的REST客户端，它占用较少">
@@ -199,6 +199,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>Nexus 是Maven仓库管理器，如果你使用Maven，你可以从Maven中央仓库 下载所需要的构件（artifact），但这通常不是一个好的做法，你应该在本地架设一个Maven仓库服务器，在代理远程仓库的同时维护本地仓库，以节省带宽和时间，Nexus就可以满足这样的需要。此外，他还提供了强大的仓库管理功能，构件搜索功能，它基于REST，友好的UI是一个extjs的REST客户端，它占用较少的内存，基于简单文件系统而非数据库。这些优点使其日趋成为最流行的Maven仓库管理器。</p>
+<a id="more"></a>
 <h1 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h1><p>私服是架设在局域网的一种特殊的远程仓库，目的是代理远程仓库及部署第三方构件。</p>
 <p>优势：</p>
 <ol>
@@ -384,7 +385,15 @@ runtime=${bundleBasedir}/nexus/WEB-INF
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具搭建  项目管理  Maven</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">工具搭建</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">项目管理</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Maven</a>
         		</li>
       		
 		</ul>
@@ -607,7 +616,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具搭建  项目管理  Maven</a>
+                <a href="javascript:void(0)" class="js-tag color5">工具搭建</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">项目管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Maven</a>
               </li>
             
             <div class="clearfix"></div>
