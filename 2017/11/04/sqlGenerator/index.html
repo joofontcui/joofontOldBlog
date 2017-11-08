@@ -15,7 +15,7 @@
 <meta property="og:url" content="//www.joofont.com/2017/11/04/sqlGenerator/index.html">
 <meta property="og:site_name" content="崔俊的博客">
 <meta property="og:description" content="Mybatis 应用程序，需要大量的配置文件，对于一个成百上千的数据库表来说，完全手工配置，这是一个很恐怖的工作量. 所以 Mybatis 官方也推出了一个 Mybatis 代码生成工具的 jar 包.主要有以下功能: 1.生成 pojo 与 数据库结构对应2.如果有主键，能匹配主键">
-<meta property="og:updated_time" content="2017-11-05T09:27:12.243Z">
+<meta property="og:updated_time" content="2017-11-08T09:48:52.983Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mybatis代码生成工具">
 <meta name="twitter:description" content="Mybatis 应用程序，需要大量的配置文件，对于一个成百上千的数据库表来说，完全手工配置，这是一个很恐怖的工作量. 所以 Mybatis 官方也推出了一个 Mybatis 代码生成工具的 jar 包.主要有以下功能: 1.生成 pojo 与 数据库结构对应2.如果有主键，能匹配主键">
@@ -213,15 +213,15 @@ var _hmt = _hmt || [];
 &lt;classPathEntry
         location=&quot;C:\Users\Administrator\.m2\repository\mysql\mysql-connector-java\5.1.36\mysql-connector-java-5.1.36.jar&quot;/&gt;
 
-&lt;context id=&quot;zdk-user&quot; targetRuntime=&quot;MyBatis3&quot;&gt;
+&lt;context id=&quot;xxx-user&quot; targetRuntime=&quot;MyBatis3&quot;&gt;
 
-    &lt;plugin type=&quot;com.zdk.plugins.BaseMapperPlugin&quot;&gt;
-        &lt;property name=&quot;baseMapper&quot; value=&quot;com.zdk.dao.BaseMapper&quot;/&gt;
+    &lt;plugin type=&quot;com.xxx.plugins.BaseMapperPlugin&quot;&gt;
+        &lt;property name=&quot;baseMapper&quot; value=&quot;com.xxx.dao.BaseMapper&quot;/&gt;
     &lt;/plugin&gt;
 
-    &lt;plugin type=&quot;com.zdk.plugins.ColumnCommentPlugin&quot;&gt;&lt;/plugin&gt;
-    &lt;plugin type=&quot;com.zdk.plugins.RenameMapperMethodPlugin&quot;&gt;&lt;/plugin&gt;
-    &lt;plugin type=&quot;com.zdk.plugins.IgnoreMethodPlugin&quot;&gt;&lt;/plugin&gt;
+    &lt;plugin type=&quot;com.xxx.plugins.ColumnCommentPlugin&quot;&gt;&lt;/plugin&gt;
+    &lt;plugin type=&quot;com.xxx.plugins.RenameMapperMethodPlugin&quot;&gt;&lt;/plugin&gt;
+    &lt;plugin type=&quot;com.xxx.plugins.IgnoreMethodPlugin&quot;&gt;&lt;/plugin&gt;
 
     &lt;!-- 修改ExampleClass成***Criteria后缀 --&gt;
     &lt;plugin type=&quot;org.mybatis.generator.plugins.RenameExampleClassPlugin&quot;&gt;
@@ -235,9 +235,9 @@ var _hmt = _hmt || [];
     &lt;/commentGenerator&gt;
 
     &lt;jdbcConnection driverClass=&quot;com.mysql.jdbc.Driver&quot;
-                    connectionURL=&quot;jdbc:mysql://115.159.205.15:3306/zdk&quot;
-                    userId=&quot;o2o&quot;
-                    password=&quot;amttgroup&quot;&gt;
+                    connectionURL=&quot;jdbc:mysql://ip:3306/xxx&quot;
+                    userId=&quot;root&quot;
+                    password=&quot;root&quot;&gt;
     &lt;/jdbcConnection&gt;
 
     &lt;javaTypeResolver&gt;
@@ -246,21 +246,21 @@ var _hmt = _hmt || [];
 
     &lt;!-- 数据表对应的model 层  --&gt;
     &lt;javaModelGenerator
-            targetPackage=&quot;com.zdk.store.entity&quot; targetProject=&quot;src/main/java&quot;&gt;
-        &lt;property name=&quot;rootClass&quot; value=&quot;com.zdk.entity.BaseEntity&quot;/&gt;
+            targetPackage=&quot;com.xxx.store.entity&quot; targetProject=&quot;src/main/java&quot;&gt;
+        &lt;property name=&quot;rootClass&quot; value=&quot;com.xxx.entity.BaseEntity&quot;/&gt;
         &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot;/&gt;
         &lt;property name=&quot;trimStrings&quot; value=&quot;false&quot;/&gt;
     &lt;/javaModelGenerator&gt;
 
     &lt;!-- sql mapper 映射配置文件 --&gt;
-    &lt;sqlMapGenerator targetPackage=&quot;com.zdk.store.dao&quot; targetProject=&quot;src/main/resources&quot;&gt;
+    &lt;sqlMapGenerator targetPackage=&quot;com.xxx.store.dao&quot; targetProject=&quot;src/main/resources&quot;&gt;
         &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot;/&gt;
     &lt;/sqlMapGenerator&gt;
 
     &lt;!-- mapper接口 --&gt;
     &lt;javaClientGenerator type=&quot;XMLMAPPER&quot;
-                         targetPackage=&quot;com.zdk.store.dao&quot; targetProject=&quot;src/main/java&quot;&gt;
-        &lt;!--&lt;property name=&quot;rootInterface&quot; value=&quot;com.zdk.dao.BaseMapper&quot; /&gt;--&gt;
+                         targetPackage=&quot;com.xxx.store.dao&quot; targetProject=&quot;src/main/java&quot;&gt;
+        &lt;!--&lt;property name=&quot;rootInterface&quot; value=&quot;com.xxx.dao.BaseMapper&quot; /&gt;--&gt;
         &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot;/&gt;
     &lt;/javaClientGenerator&gt;
 
