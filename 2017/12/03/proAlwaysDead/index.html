@@ -15,7 +15,7 @@
 <meta property="og:url" content="//www.joofont.com/2017/12/03/proAlwaysDead/index.html">
 <meta property="og:site_name" content="崔俊的博客">
 <meta property="og:description" content="springcloud项目，微服务大概有7个。本来今天跟前端同学联调差不多了，让测试同学过一遍，准备下周一提测，结果今天前端和app的同学一直反馈不同的微服务挂了。我登上终端去看了一遍日志，只有zuul的异常，再无其他log。无奈重启一个微服务，结果过了半小时，另一个微服务又挂掉了。怀疑是不是内存问题，就去top看了一下，8G内存剩0.8G，不太敢确定。无奈前端和app同学表示很着急测试，只得先k">
-<meta property="og:updated_time" content="2017-12-03T14:24:21.443Z">
+<meta property="og:updated_time" content="2017-12-03T14:55:37.555Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SpringCloud微服务经常挂掉的原因">
 <meta name="twitter:description" content="springcloud项目，微服务大概有7个。本来今天跟前端同学联调差不多了，让测试同学过一遍，准备下周一提测，结果今天前端和app的同学一直反馈不同的微服务挂了。我登上终端去看了一遍日志，只有zuul的异常，再无其他log。无奈重启一个微服务，结果过了半小时，另一个微服务又挂掉了。怀疑是不是内存问题，就去top看了一下，8G内存剩0.8G，不太敢确定。无奈前端和app同学表示很着急测试，只得先k">
@@ -198,7 +198,7 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 <p>边吃饭边google，因为感觉可能是内存问题，所以关键词大概方向：springcloud、微服务经常挂、linux内存。然后就找到了问题的关键：</p>
 <blockquote>
-<p>1.建议安装个zabbix，做监控用<br>2.sudo dmesg -T | grep “(java)”   ，可以查看项目被关掉的记录<br>3.启动项目的时候改为java -jar  *.jar -Xmx 3200m -xms1600<br>4.建议升级下内存，另外设置下虚拟内存（SWAP）  </p>
+<p>1.建议安装个zabbix，做监控用<br>2.sudo dmesg -T | grep “(java)”   ，可以查看项目被关掉的记录<br>3.启动项目的时候改为java -Xmx512m -Xms256m -jar target/xxx.jar<br>4.建议升级下内存，另外设置下虚拟内存（SWAP）  </p>
 </blockquote>
 <hr>
 <p>参考：<br><a href="http://blog.csdn.net/qq_35981283/article/details/62233725" target="_blank" rel="external">http://blog.csdn.net/qq_35981283/article/details/62233725</a><br><a href="http://www.111cn.net/sys/CentOS/84755.htm" target="_blank" rel="external">http://www.111cn.net/sys/CentOS/84755.htm</a></p>
