@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="//www.joofont.com">
-  <title>Archives | 崔俊的博客</title>
+  <title>秒杀系统 | 崔俊的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="人生苦短，我用python">
-<meta name="keywords" content="开发者,程序猿编程,代码">
-<meta property="og:type" content="website">
-<meta property="og:title" content="崔俊的博客">
-<meta property="og:url" content="//www.joofont.com/archives/index.html">
+  <meta name="description" content="秒杀系统需要保证东西不多卖，关键是在多个客户端对库存进行减操作时，必须加锁。防止高并发下导致库存出现负数的情况。Redis 中的watch可以在事务前对数据进行监控，如果在事务执行前，该数据发生改变，则事务不执行。所以使用watch和事务来完成这一功能">
+<meta name="keywords" content="Java、Redis、高并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="秒杀系统">
+<meta property="og:url" content="//www.joofont.com/2017/12/12/redisWatch/index.html">
 <meta property="og:site_name" content="崔俊的博客">
-<meta property="og:description" content="人生苦短，我用python">
+<meta property="og:description" content="秒杀系统需要保证东西不多卖，关键是在多个客户端对库存进行减操作时，必须加锁。防止高并发下导致库存出现负数的情况。Redis 中的watch可以在事务前对数据进行监控，如果在事务执行前，该数据发生改变，则事务不执行。所以使用watch和事务来完成这一功能">
+<meta property="og:updated_time" content="2017-12-12T14:30:11.713Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="崔俊的博客">
-<meta name="twitter:description" content="人生苦短，我用python">
+<meta name="twitter:title" content="秒杀系统">
+<meta name="twitter:description" content="秒杀系统需要保证东西不多卖，关键是在多个客户端对库存进行减操作时，必须加锁。防止高并发下导致库存出现负数的情况。Redis 中的watch可以在事务前对数据进行监控，如果在事务执行前，该数据发生改变，则事务不执行。所以使用watch和事务来完成这一功能">
   
     <link rel="alternative" href="/atom.xml" title="崔俊的博客" type="application/atom+xml">
   
@@ -173,36 +174,213 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-redisWatch" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/12/12/redisWatch/" class="archive-article-date">
-  	<time datetime="2017-12-12T14:28:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-12</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/12/redisWatch/">秒杀系统</a>
+    <h1 class="article-title" itemprop="name">
+      秒杀系统
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/12/12/redisWatch/" class="archive-article-date">
+  	<time datetime="2017-12-12T14:28:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>秒杀系统需要保证东西不多卖，关键是在多个客户端对库存进行减操作时，必须加锁。防止高并发下导致库存出现负数的情况。Redis 中的watch可以在事务前对数据进行监控，如果在事务执行前，该数据发生改变，则事务不执行。所以使用watch和事务来完成这一功能</p>
+<a id="more"></a>
+<h2 id="redis中的事务定义"><a href="#redis中的事务定义" class="headerlink" title="redis中的事务定义"></a>redis中的事务定义</h2><p>Redis中的事务（transaction）是一组命令的集合。</p>
+<ul>
+<li><p>[x] Redis保证一个事务中的所有命令要么都执行，要么都不执行。如果在发送EXEC命令前客户端断线了，则Redis会清空事务队列，事务中的所有命令都不会执行。而一旦客户端发送了EXEC命令，所有的命令就都会被执行，即使此后客户端断线也没关系，因为Redis中已经记录了所有要执行的命令。</p>
+</li>
+<li><p>[x] Redis保证一个事务内的命令依次执行而不被其他命令插入。试想客户端A需要执行几条命令，同时客户端B发送了一条命令，如果不使用事务，则客户端B的命令可能会插入到客户端A的几条命令中执行。如果不希望发生这种情况，也可以使用事务。</p>
+</li>
+</ul>
+<blockquote>
+<p>Redis的事务没有关系数据库事务提供的回滚（rollback）功能。</p>
+</blockquote>
+<h2 id="watch命令描述"><a href="#watch命令描述" class="headerlink" title="watch命令描述"></a>watch命令描述</h2><ul>
+<li><p>[x] WATCH命令可以监控一个或多个键，一旦其中有一个键被修改（或删除），之后的事务就不会执行。监控一直持续到EXEC命令（事务中的命令是在EXEC之后才执行的，所以在MULTI命令后可以修改WATCH监控的键值）</p>
+<pre><code>/**
+  * 秒杀操作
+  * @param request
+  * @param activity_id
+  * @param openid
+  * @param hotelID
+  * @param total
+  * @param commodity_id
+  * @param count
+  * @return
+      */
+       @RequestMapping(&quot;/secKill&quot;)
+       public ModelAndView secKill(HttpServletRequest request, int activity_id, String openid, String hotelID,int total, int commodity_id, int count){
+
+     ModelAndView view = new ModelAndView(new FastJsonJsonView());
+     Map&lt;String, Object&gt; map = new HashMap&lt;String, Object&gt;();
+
+     //拦截用户多次请求(1秒内)
+     String askResult = userTokenCacheService.storageUserToken(makeUrl(request), request.getSession().getId(), 1 * 1000);
+     logger.warn(&quot;拦截用户请求结果 ：&quot; + askResult);
+     if(!&quot;OK&quot;.equals(askResult)){
+         map.put(&quot;status&quot;, Global.RefuseRequest);
+         map.put(&quot;text&quot;, &quot;请不要重复提交&quot;);
+         view.addAllObjects(map);
+         return view;
+     }
+
+     try {
+         Activity activity = activityService.findById(activity_id);
+
+         //限购控制
+         if (activity.getIs_purchase() == 1 &amp;&amp; count &gt; activity.getCount_purchase() &amp;&amp; activity.getCount_purchase()!= 0) {
+             map.put(&quot;status&quot;, Global.Failed);
+             map.put(&quot;text&quot;, &quot;秒杀每人一共限购&quot; + activity.getCount_purchase() + &quot;份&quot;);
+             view.addAllObjects(map);
+             return view;
+         }
+
+         if (activity.getIs_purchase() == 1 &amp;&amp; count &gt;  activity.getCount_daily() &amp;&amp; activity.getCount_daily()!= 0) {
+             map.put(&quot;status&quot;, Global.Failed);
+             map.put(&quot;text&quot;, &quot;秒杀每人每天限购&quot; + activity.getCount_daily() + &quot;份&quot;);
+             view.addAllObjects(map);
+             return view;
+         }
+
+         //用户秒杀数量限制
+         int countDayInt = 0;
+         int countAllInt = 0;
+
+         if (activity.getIs_purchase() == 1) {
+             if (activity.getCount_daily() != 0) {
+                 String countDay = cacheService.getSeckillDayCount(openid, activity_id);
+                 countDayInt = NumberUtil.parseInt(countDay, 0);
+                 logger.warn(&quot;今天买了 = &quot;+countDayInt);
+                 logger.warn(&quot;日限购数 =&quot;+activity.getCount_daily());
+                 if ((countDayInt + count) &gt; activity.getCount_daily()) {
+                     map.put(&quot;status&quot;, Global.Failed);
+                     map.put(&quot;text&quot;, &quot;您已经超过今日限购数量，请明日再来&quot;);
+                     view.addAllObjects(map);
+                     return view;
+                 }
+             }
+
+             if (activity.getCount_purchase() != 0) {
+                 String countAll = cacheService.getSeckillAllCount(openid, activity_id);
+                 countAllInt = NumberUtil.parseInt(countAll, 0);
+                 logger.warn(&quot;一共买了 = &quot;+countAllInt);
+                 logger.warn(&quot;总限购数 =&quot;+activity.getCount_purchase());
+                 if ((countAllInt + count) &gt; activity.getCount_purchase()) {
+                     map.put(&quot;status&quot;, Global.Failed);
+                     map.put(&quot;text&quot;, &quot;您已经超过限购数量，请预约其他活动&quot;);
+                     view.addAllObjects(map);
+                     return view;
+                 }
+             }
+
+         }
+
+         if(activity.getStatus() == 2){
+             map.put(&quot;status&quot;, Global.Failed);
+             map.put(&quot;text&quot;, &quot;活动已结束&quot;);
+             view.addAllObjects(map);
+             return view;
+         }
+
+         // 获取秒杀库存
+         int result = cacheService.spikeStock(activity_id, Integer.valueOf(hotelID), count);
+
+         if (result == 1) {//事务提交出错
+             map.put(&quot;status&quot;, Global.Exception);
+             map.put(&quot;text&quot;, &quot;服务器繁忙，请重新开始抢购&quot;);
+             view.addAllObjects(map);
+             return view;
+         } else if (result == 3) {//库存数量不够用户买
+             map.put(&quot;status&quot;, Global.NotCount);
+             map.put(&quot;text&quot;, &quot;库存数量不足您购买，请更改购买数量&quot;);
+             view.addAllObjects(map);
+             return view;
+         } else if (result == 4) {//已被秒杀完
+             map.put(&quot;status&quot;, &quot;319&quot;);
+             map.put(&quot;text&quot;, &quot;已被秒杀完&quot;);
+         } else if (result == 5) {//服务器异常
+             map.put(&quot;status&quot;, Global.Exception);
+             logger.warn(&quot;服务器异常1&quot;);
+             map.put(&quot;text&quot;, &quot;服务器异常1&quot;);
+             view.addAllObjects(map);
+             return view;
+         } else if (result == 2) {//购买成功
+             Hotel hotel = getHotel(hotelID);
+
+             long orderID = orderService.addActivityOrder(openid, hotel.getId(), total, commodity_id, count, activity_id,null,1,&quot;&quot;);
+
+             if (orderID &gt; 0) {
+                 //处理售罄时间的情况
+                 boolean flgKey = cacheService.getExicts(activity.getId(), activity.getHotel_id());
+                 if (flgKey) {
+                     String value = cacheService.getStock(activity.getId(), activity.getHotel_id());
+                     if(NumberUtil.parseInt(value, 0) == 0){
+                         activityService.updateSoldTime(activity.getHotel_id(), activity_id, System.currentTimeMillis());
+                     }
+                 }
+
+                 //秒杀成功后，将数量set到缓存里
+                 int resultDayInt = countDayInt + count;
+                 String seResult = cacheService.setSeckillDayCount(resultDayInt, openid, activity_id, DateFormatUtil.getNowSeconds());
+                 int resultAllInt = countAllInt + count;
+                 long remainingTime = (activity.getEnd_time() - System.currentTimeMillis()) / 1000;
+                 String secResult = cacheService.setSeckillAllCount(resultAllInt, openid, activity_id, (int)remainingTime);
+                 logger.info(&quot;每天 seResult =&quot;+seResult+&quot;总共 secResult =&quot;+secResult+&quot;count =&quot;+count+&quot;openid =&quot;+openid+&quot;activity_id =&quot;+activity_id+&quot;redis有效秒数=&quot;+DateFormatUtil.getNowSeconds());
+                 logger.info(&quot;key = Day_&quot;+ openid + &quot;_&quot; + activity_id);
+             }
+         }
+     } catch (Exception e){
+         e.printStackTrace();
+         map.put(&quot;status&quot;, Global.Exception);
+         logger.error(&quot;服务器异常2&quot;);
+         map.put(&quot;text&quot;, &quot;服务器异常2&quot;);
+     }
+     view.addAllObjects(map);
+     return view;
+ }
+</code></pre></li>
+</ul>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a href="http://www.jianshu.com/p/361cb9cd13d5" target="_blank" rel="external">http://www.jianshu.com/p/361cb9cd13d5</a><br><a href="http://www.cnblogs.com/shihaiming/p/6062663.html" target="_blank" rel="external">http://www.cnblogs.com/shihaiming/p/6062663.html</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -214,317 +392,123 @@ var _hmt = _hmt || [];
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://www.joofont.com/2017/12/12/redisWatch/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/12/12/RESTful/" class="archive-article-date">
-  	<time datetime="2017-12-12T13:29:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-12</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2017/12/12/RESTful/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">RESTful</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/12/RESTful/">RESTful</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">项目管理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis中的事务定义"><span class="toc-number">1.</span> <span class="toc-text">redis中的事务定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#watch命令描述"><span class="toc-number">2.</span> <span class="toc-text">watch命令描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考："><span class="toc-number">3.</span> <span class="toc-text">参考：</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/12/03/redisForMore/" class="archive-article-date">
-  	<time datetime="2017-12-03T14:45:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/03/redisForMore/">Redis存储复杂类型</a>
-    </h1>
-  
+        
+    </div>
+</aside>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Redis</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">List/Map</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/12/03/proAlwaysDead/" class="archive-article-date">
-  	<time datetime="2017-12-03T14:21:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/03/proAlwaysDead/">SpringCloud微服务经常挂掉的原因</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Maven</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Mybatis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+    <section id="comments">
+        <!--PC和WAP自适应版-->
+        <div id="SOHUCS" sid="秒杀系统" ></div> 
+        <script type="text/javascript"> 
+        (function(){ 
+        var appid = 'cytiiq6ug'; 
+        var conf = 'prod_97bf6c8b8cf07f4644716a68f5e7af71'; 
+        var width = window.innerWidth || document.documentElement.clientWidth; 
+        if (width < 960) { 
+        window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+    </section>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/11/04/sqlGenerator/" class="archive-article-date">
-  	<time datetime="2017-11-04T09:18:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/11/04/sqlGenerator/">Mybatis代码生成工具</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Maven</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Mybatis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/11/01/Chandao/" class="archive-article-date">
-  	<time datetime="2017-11-01T12:52:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/11/01/Chandao/">禅道搭建</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">工具搭建</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">项目管理</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/31/Nexus/" class="archive-article-date">
-  	<time datetime="2017-10-31T13:20:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-31</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/31/Nexus/">Nexus搭建</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">工具搭建</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">项目管理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Maven</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/28/Svn/" class="archive-article-date">
-  	<time datetime="2017-10-28T13:16:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/28/Svn/">Svn搭建</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">工具搭建</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">项目管理</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SVN</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -555,8 +539,8 @@ var _hmt = _hmt || [];
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
