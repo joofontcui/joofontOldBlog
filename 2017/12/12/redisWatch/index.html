@@ -15,7 +15,7 @@
 <meta property="og:url" content="//www.joofont.com/2017/12/12/redisWatch/index.html">
 <meta property="og:site_name" content="崔俊的博客">
 <meta property="og:description" content="秒杀系统需要保证东西不多卖，关键是在多个客户端对库存进行减操作时，必须加锁。防止高并发下导致库存出现负数的情况。Redis 中的watch可以在事务前对数据进行监控，如果在事务执行前，该数据发生改变，则事务不执行。所以使用watch和事务来完成这一功能">
-<meta property="og:updated_time" content="2017-12-12T14:30:11.713Z">
+<meta property="og:updated_time" content="2017-12-12T14:34:58.793Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="秒杀系统">
 <meta name="twitter:description" content="秒杀系统需要保证东西不多卖，关键是在多个客户端对库存进行减操作时，必须加锁。防止高并发下导致库存出现负数的情况。Redis 中的watch可以在事务前对数据进行监控，如果在事务执行前，该数据发生改变，则事务不执行。所以使用watch和事务来完成这一功能">
@@ -198,159 +198,18 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 <h2 id="redis中的事务定义"><a href="#redis中的事务定义" class="headerlink" title="redis中的事务定义"></a>redis中的事务定义</h2><p>Redis中的事务（transaction）是一组命令的集合。</p>
 <ul>
-<li><p>[x] Redis保证一个事务中的所有命令要么都执行，要么都不执行。如果在发送EXEC命令前客户端断线了，则Redis会清空事务队列，事务中的所有命令都不会执行。而一旦客户端发送了EXEC命令，所有的命令就都会被执行，即使此后客户端断线也没关系，因为Redis中已经记录了所有要执行的命令。</p>
+<li><p>[x]  Redis保证一个事务中的所有命令要么都执行，要么都不执行。如果在发送EXEC命令前客户端断线了，则Redis会清空事务队列，事务中的所有命令都不会执行。而一旦客户端发送了EXEC命令，所有的命令就都会被执行，即使此后客户端断线也没关系，因为Redis中已经记录了所有要执行的命令。</p>
 </li>
-<li><p>[x] Redis保证一个事务内的命令依次执行而不被其他命令插入。试想客户端A需要执行几条命令，同时客户端B发送了一条命令，如果不使用事务，则客户端B的命令可能会插入到客户端A的几条命令中执行。如果不希望发生这种情况，也可以使用事务。</p>
+<li><p>[x]  Redis保证一个事务内的命令依次执行而不被其他命令插入。试想客户端A需要执行几条命令，同时客户端B发送了一条命令，如果不使用事务，则客户端B的命令可能会插入到客户端A的几条命令中执行。如果不希望发生这种情况，也可以使用事务。</p>
 </li>
 </ul>
 <blockquote>
 <p>Redis的事务没有关系数据库事务提供的回滚（rollback）功能。</p>
 </blockquote>
 <h2 id="watch命令描述"><a href="#watch命令描述" class="headerlink" title="watch命令描述"></a>watch命令描述</h2><ul>
-<li><p>[x] WATCH命令可以监控一个或多个键，一旦其中有一个键被修改（或删除），之后的事务就不会执行。监控一直持续到EXEC命令（事务中的命令是在EXEC之后才执行的，所以在MULTI命令后可以修改WATCH监控的键值）</p>
-<pre><code>/**
-  * 秒杀操作
-  * @param request
-  * @param activity_id
-  * @param openid
-  * @param hotelID
-  * @param total
-  * @param commodity_id
-  * @param count
-  * @return
-      */
-       @RequestMapping(&quot;/secKill&quot;)
-       public ModelAndView secKill(HttpServletRequest request, int activity_id, String openid, String hotelID,int total, int commodity_id, int count){
-
-     ModelAndView view = new ModelAndView(new FastJsonJsonView());
-     Map&lt;String, Object&gt; map = new HashMap&lt;String, Object&gt;();
-
-     //拦截用户多次请求(1秒内)
-     String askResult = userTokenCacheService.storageUserToken(makeUrl(request), request.getSession().getId(), 1 * 1000);
-     logger.warn(&quot;拦截用户请求结果 ：&quot; + askResult);
-     if(!&quot;OK&quot;.equals(askResult)){
-         map.put(&quot;status&quot;, Global.RefuseRequest);
-         map.put(&quot;text&quot;, &quot;请不要重复提交&quot;);
-         view.addAllObjects(map);
-         return view;
-     }
-
-     try {
-         Activity activity = activityService.findById(activity_id);
-
-         //限购控制
-         if (activity.getIs_purchase() == 1 &amp;&amp; count &gt; activity.getCount_purchase() &amp;&amp; activity.getCount_purchase()!= 0) {
-             map.put(&quot;status&quot;, Global.Failed);
-             map.put(&quot;text&quot;, &quot;秒杀每人一共限购&quot; + activity.getCount_purchase() + &quot;份&quot;);
-             view.addAllObjects(map);
-             return view;
-         }
-
-         if (activity.getIs_purchase() == 1 &amp;&amp; count &gt;  activity.getCount_daily() &amp;&amp; activity.getCount_daily()!= 0) {
-             map.put(&quot;status&quot;, Global.Failed);
-             map.put(&quot;text&quot;, &quot;秒杀每人每天限购&quot; + activity.getCount_daily() + &quot;份&quot;);
-             view.addAllObjects(map);
-             return view;
-         }
-
-         //用户秒杀数量限制
-         int countDayInt = 0;
-         int countAllInt = 0;
-
-         if (activity.getIs_purchase() == 1) {
-             if (activity.getCount_daily() != 0) {
-                 String countDay = cacheService.getSeckillDayCount(openid, activity_id);
-                 countDayInt = NumberUtil.parseInt(countDay, 0);
-                 logger.warn(&quot;今天买了 = &quot;+countDayInt);
-                 logger.warn(&quot;日限购数 =&quot;+activity.getCount_daily());
-                 if ((countDayInt + count) &gt; activity.getCount_daily()) {
-                     map.put(&quot;status&quot;, Global.Failed);
-                     map.put(&quot;text&quot;, &quot;您已经超过今日限购数量，请明日再来&quot;);
-                     view.addAllObjects(map);
-                     return view;
-                 }
-             }
-
-             if (activity.getCount_purchase() != 0) {
-                 String countAll = cacheService.getSeckillAllCount(openid, activity_id);
-                 countAllInt = NumberUtil.parseInt(countAll, 0);
-                 logger.warn(&quot;一共买了 = &quot;+countAllInt);
-                 logger.warn(&quot;总限购数 =&quot;+activity.getCount_purchase());
-                 if ((countAllInt + count) &gt; activity.getCount_purchase()) {
-                     map.put(&quot;status&quot;, Global.Failed);
-                     map.put(&quot;text&quot;, &quot;您已经超过限购数量，请预约其他活动&quot;);
-                     view.addAllObjects(map);
-                     return view;
-                 }
-             }
-
-         }
-
-         if(activity.getStatus() == 2){
-             map.put(&quot;status&quot;, Global.Failed);
-             map.put(&quot;text&quot;, &quot;活动已结束&quot;);
-             view.addAllObjects(map);
-             return view;
-         }
-
-         // 获取秒杀库存
-         int result = cacheService.spikeStock(activity_id, Integer.valueOf(hotelID), count);
-
-         if (result == 1) {//事务提交出错
-             map.put(&quot;status&quot;, Global.Exception);
-             map.put(&quot;text&quot;, &quot;服务器繁忙，请重新开始抢购&quot;);
-             view.addAllObjects(map);
-             return view;
-         } else if (result == 3) {//库存数量不够用户买
-             map.put(&quot;status&quot;, Global.NotCount);
-             map.put(&quot;text&quot;, &quot;库存数量不足您购买，请更改购买数量&quot;);
-             view.addAllObjects(map);
-             return view;
-         } else if (result == 4) {//已被秒杀完
-             map.put(&quot;status&quot;, &quot;319&quot;);
-             map.put(&quot;text&quot;, &quot;已被秒杀完&quot;);
-         } else if (result == 5) {//服务器异常
-             map.put(&quot;status&quot;, Global.Exception);
-             logger.warn(&quot;服务器异常1&quot;);
-             map.put(&quot;text&quot;, &quot;服务器异常1&quot;);
-             view.addAllObjects(map);
-             return view;
-         } else if (result == 2) {//购买成功
-             Hotel hotel = getHotel(hotelID);
-
-             long orderID = orderService.addActivityOrder(openid, hotel.getId(), total, commodity_id, count, activity_id,null,1,&quot;&quot;);
-
-             if (orderID &gt; 0) {
-                 //处理售罄时间的情况
-                 boolean flgKey = cacheService.getExicts(activity.getId(), activity.getHotel_id());
-                 if (flgKey) {
-                     String value = cacheService.getStock(activity.getId(), activity.getHotel_id());
-                     if(NumberUtil.parseInt(value, 0) == 0){
-                         activityService.updateSoldTime(activity.getHotel_id(), activity_id, System.currentTimeMillis());
-                     }
-                 }
-
-                 //秒杀成功后，将数量set到缓存里
-                 int resultDayInt = countDayInt + count;
-                 String seResult = cacheService.setSeckillDayCount(resultDayInt, openid, activity_id, DateFormatUtil.getNowSeconds());
-                 int resultAllInt = countAllInt + count;
-                 long remainingTime = (activity.getEnd_time() - System.currentTimeMillis()) / 1000;
-                 String secResult = cacheService.setSeckillAllCount(resultAllInt, openid, activity_id, (int)remainingTime);
-                 logger.info(&quot;每天 seResult =&quot;+seResult+&quot;总共 secResult =&quot;+secResult+&quot;count =&quot;+count+&quot;openid =&quot;+openid+&quot;activity_id =&quot;+activity_id+&quot;redis有效秒数=&quot;+DateFormatUtil.getNowSeconds());
-                 logger.info(&quot;key = Day_&quot;+ openid + &quot;_&quot; + activity_id);
-             }
-         }
-     } catch (Exception e){
-         e.printStackTrace();
-         map.put(&quot;status&quot;, Global.Exception);
-         logger.error(&quot;服务器异常2&quot;);
-         map.put(&quot;text&quot;, &quot;服务器异常2&quot;);
-     }
-     view.addAllObjects(map);
-     return view;
- }
-</code></pre></li>
+<li style="list-style: none"><input type="checkbox" checked> WATCH命令可以监控一个或多个键，一旦其中有一个键被修改（或删除），之后的事务就不会执行。监控一直持续到EXEC命令（事务中的命令是在EXEC之后才执行的，所以在MULTI命令后可以修改WATCH监控的键值）</li>
 </ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">/**</span></div><div class="line"><span class="comment"> * 秒杀操作</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> request</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> activity_id</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> openid</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> hotelID</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> total</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> commodity_id</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> count</span></div><div class="line"><span class="comment"> * <span class="doctag">@return</span></span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/secKill"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">secKill</span><span class="params">(HttpServletRequest request, <span class="keyword">int</span> activity_id, String openid, String hotelID,<span class="keyword">int</span> total, <span class="keyword">int</span> commodity_id, <span class="keyword">int</span> count)</span></span>&#123;</div><div class="line"></div><div class="line">    ModelAndView view = <span class="keyword">new</span> ModelAndView(<span class="keyword">new</span> FastJsonJsonView());</div><div class="line">    Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</div><div class="line"></div><div class="line">    <span class="comment">//拦截用户多次请求(1秒内)</span></div><div class="line">    String askResult = userTokenCacheService.storageUserToken(makeUrl(request), request.getSession().getId(), <span class="number">1</span> * <span class="number">1000</span>);</div><div class="line">    logger.warn(<span class="string">"拦截用户请求结果 ："</span> + askResult);</div><div class="line">    <span class="keyword">if</span>(!<span class="string">"OK"</span>.equals(askResult))&#123;</div><div class="line">        map.put(<span class="string">"status"</span>, Global.RefuseRequest);</div><div class="line">        map.put(<span class="string">"text"</span>, <span class="string">"请不要重复提交"</span>);</div><div class="line">        view.addAllObjects(map);</div><div class="line">        <span class="keyword">return</span> view;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Activity activity = activityService.findById(activity_id);</div><div class="line"></div><div class="line">        <span class="comment">//限购控制</span></div><div class="line">        <span class="keyword">if</span> (activity.getIs_purchase() == <span class="number">1</span> &amp;&amp; count &gt; activity.getCount_purchase() &amp;&amp; activity.getCount_purchase()!= <span class="number">0</span>) &#123;</div><div class="line">            map.put(<span class="string">"status"</span>, Global.Failed);</div><div class="line">            map.put(<span class="string">"text"</span>, <span class="string">"秒杀每人一共限购"</span> + activity.getCount_purchase() + <span class="string">"份"</span>);</div><div class="line">            view.addAllObjects(map);</div><div class="line">            <span class="keyword">return</span> view;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (activity.getIs_purchase() == <span class="number">1</span> &amp;&amp; count &gt;  activity.getCount_daily() &amp;&amp; activity.getCount_daily()!= <span class="number">0</span>) &#123;</div><div class="line">            map.put(<span class="string">"status"</span>, Global.Failed);</div><div class="line">            map.put(<span class="string">"text"</span>, <span class="string">"秒杀每人每天限购"</span> + activity.getCount_daily() + <span class="string">"份"</span>);</div><div class="line">            view.addAllObjects(map);</div><div class="line">            <span class="keyword">return</span> view;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//用户秒杀数量限制</span></div><div class="line">        <span class="keyword">int</span> countDayInt = <span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> countAllInt = <span class="number">0</span>;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (activity.getIs_purchase() == <span class="number">1</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (activity.getCount_daily() != <span class="number">0</span>) &#123;</div><div class="line">                String countDay = cacheService.getSeckillDayCount(openid, activity_id);</div><div class="line">                countDayInt = NumberUtil.parseInt(countDay, <span class="number">0</span>);</div><div class="line">                logger.warn(<span class="string">"今天买了 = "</span>+countDayInt);</div><div class="line">                logger.warn(<span class="string">"日限购数 ="</span>+activity.getCount_daily());</div><div class="line">                <span class="keyword">if</span> ((countDayInt + count) &gt; activity.getCount_daily()) &#123;</div><div class="line">                    map.put(<span class="string">"status"</span>, Global.Failed);</div><div class="line">                    map.put(<span class="string">"text"</span>, <span class="string">"您已经超过今日限购数量，请明日再来"</span>);</div><div class="line">                    view.addAllObjects(map);</div><div class="line">                    <span class="keyword">return</span> view;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (activity.getCount_purchase() != <span class="number">0</span>) &#123;</div><div class="line">                String countAll = cacheService.getSeckillAllCount(openid, activity_id);</div><div class="line">                countAllInt = NumberUtil.parseInt(countAll, <span class="number">0</span>);</div><div class="line">                logger.warn(<span class="string">"一共买了 = "</span>+countAllInt);</div><div class="line">                logger.warn(<span class="string">"总限购数 ="</span>+activity.getCount_purchase());</div><div class="line">                <span class="keyword">if</span> ((countAllInt + count) &gt; activity.getCount_purchase()) &#123;</div><div class="line">                    map.put(<span class="string">"status"</span>, Global.Failed);</div><div class="line">                    map.put(<span class="string">"text"</span>, <span class="string">"您已经超过限购数量，请预约其他活动"</span>);</div><div class="line">                    view.addAllObjects(map);</div><div class="line">                    <span class="keyword">return</span> view;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span>(activity.getStatus() == <span class="number">2</span>)&#123;</div><div class="line">            map.put(<span class="string">"status"</span>, Global.Failed);</div><div class="line">            map.put(<span class="string">"text"</span>, <span class="string">"活动已结束"</span>);</div><div class="line">            view.addAllObjects(map);</div><div class="line">            <span class="keyword">return</span> view;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// 获取秒杀库存</span></div><div class="line">        <span class="keyword">int</span> result = cacheService.spikeStock(activity_id, Integer.valueOf(hotelID), count);</div><div class="line">        </div><div class="line">        <span class="keyword">if</span> (result == <span class="number">1</span>) &#123;<span class="comment">//事务提交出错</span></div><div class="line">            map.put(<span class="string">"status"</span>, Global.Exception);</div><div class="line">            map.put(<span class="string">"text"</span>, <span class="string">"服务器繁忙，请重新开始抢购"</span>);</div><div class="line">            view.addAllObjects(map);</div><div class="line">            <span class="keyword">return</span> view;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (result == <span class="number">3</span>) &#123;<span class="comment">//库存数量不够用户买</span></div><div class="line">            map.put(<span class="string">"status"</span>, Global.NotCount);</div><div class="line">            map.put(<span class="string">"text"</span>, <span class="string">"库存数量不足您购买，请更改购买数量"</span>);</div><div class="line">            view.addAllObjects(map);</div><div class="line">            <span class="keyword">return</span> view;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (result == <span class="number">4</span>) &#123;<span class="comment">//已被秒杀完</span></div><div class="line">            map.put(<span class="string">"status"</span>, <span class="string">"319"</span>);</div><div class="line">            map.put(<span class="string">"text"</span>, <span class="string">"已被秒杀完"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (result == <span class="number">5</span>) &#123;<span class="comment">//服务器异常</span></div><div class="line">            map.put(<span class="string">"status"</span>, Global.Exception);</div><div class="line">            logger.warn(<span class="string">"服务器异常1"</span>);</div><div class="line">            map.put(<span class="string">"text"</span>, <span class="string">"服务器异常1"</span>);</div><div class="line">            view.addAllObjects(map);</div><div class="line">            <span class="keyword">return</span> view;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (result == <span class="number">2</span>) &#123;<span class="comment">//购买成功</span></div><div class="line">            Hotel hotel = getHotel(hotelID);</div><div class="line"></div><div class="line">            <span class="keyword">long</span> orderID = orderService.addActivityOrder(openid, hotel.getId(), total, commodity_id, count, activity_id,<span class="keyword">null</span>,<span class="number">1</span>,<span class="string">""</span>);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (orderID &gt; <span class="number">0</span>) &#123;</div><div class="line">                <span class="comment">//处理售罄时间的情况</span></div><div class="line">                <span class="keyword">boolean</span> flgKey = cacheService.getExicts(activity.getId(), activity.getHotel_id());</div><div class="line">                <span class="keyword">if</span> (flgKey) &#123;</div><div class="line">                    String value = cacheService.getStock(activity.getId(), activity.getHotel_id());</div><div class="line">                    <span class="keyword">if</span>(NumberUtil.parseInt(value, <span class="number">0</span>) == <span class="number">0</span>)&#123;</div><div class="line">                        activityService.updateSoldTime(activity.getHotel_id(), activity_id, System.currentTimeMillis());</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="comment">//秒杀成功后，将数量set到缓存里</span></div><div class="line">                <span class="keyword">int</span> resultDayInt = countDayInt + count;</div><div class="line">                String seResult = cacheService.setSeckillDayCount(resultDayInt, openid, activity_id, DateFormatUtil.getNowSeconds());</div><div class="line">                <span class="keyword">int</span> resultAllInt = countAllInt + count;</div><div class="line">                <span class="keyword">long</span> remainingTime = (activity.getEnd_time() - System.currentTimeMillis()) / <span class="number">1000</span>;</div><div class="line">                String secResult = cacheService.setSeckillAllCount(resultAllInt, openid, activity_id, (<span class="keyword">int</span>)remainingTime);</div><div class="line">                logger.info(<span class="string">"每天 seResult ="</span>+seResult+<span class="string">"总共 secResult ="</span>+secResult+<span class="string">"count ="</span>+count+<span class="string">"openid ="</span>+openid+<span class="string">"activity_id ="</span>+activity_id+<span class="string">"redis有效秒数="</span>+DateFormatUtil.getNowSeconds());</div><div class="line">                logger.info(<span class="string">"key = Day_"</span>+ openid + <span class="string">"_"</span> + activity_id);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e)&#123;</div><div class="line">        e.printStackTrace();</div><div class="line">        map.put(<span class="string">"status"</span>, Global.Exception);</div><div class="line">        logger.error(<span class="string">"服务器异常2"</span>);</div><div class="line">        map.put(<span class="string">"text"</span>, <span class="string">"服务器异常2"</span>);</div><div class="line">    &#125;</div><div class="line">    view.addAllObjects(map);</div><div class="line">    <span class="keyword">return</span> view;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a href="http://www.jianshu.com/p/361cb9cd13d5" target="_blank" rel="external">http://www.jianshu.com/p/361cb9cd13d5</a><br><a href="http://www.cnblogs.com/shihaiming/p/6062663.html" target="_blank" rel="external">http://www.cnblogs.com/shihaiming/p/6062663.html</a></p>
 
       
