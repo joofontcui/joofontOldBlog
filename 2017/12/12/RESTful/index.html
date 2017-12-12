@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="崔俊的博客">
 <meta property="og:description" content="越来越多的人开始意识到，网站即软件RESTful架构：  每一个URI代表一种资源；  客户端和服务器之间，传递这种资源的某种表现层；  客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。">
 <meta property="og:image" content="https://pic2.zhimg.com/50/06ee404783540f0af299042057738a99_hd.jpg">
-<meta property="og:updated_time" content="2017-12-12T13:31:44.381Z">
+<meta property="og:updated_time" content="2017-12-12T13:35:13.745Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RESTful">
 <meta name="twitter:description" content="越来越多的人开始意识到，网站即软件RESTful架构：  每一个URI代表一种资源；  客户端和服务器之间，传递这种资源的某种表现层；  客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。">
@@ -196,22 +196,22 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="越来越多的人开始意识到，网站即软件"><a href="#越来越多的人开始意识到，网站即软件" class="headerlink" title="越来越多的人开始意识到，网站即软件"></a>越来越多的人开始意识到，网站即软件</h3><h3 id="RESTful架构："><a href="#RESTful架构：" class="headerlink" title="RESTful架构："></a>RESTful架构：</h3><ul>
+        <h2 id="越来越多的人开始意识到，网站即软件"><a href="#越来越多的人开始意识到，网站即软件" class="headerlink" title="越来越多的人开始意识到，网站即软件"></a>越来越多的人开始意识到，网站即软件</h2><h2 id="RESTful架构："><a href="#RESTful架构：" class="headerlink" title="RESTful架构："></a>RESTful架构：</h2><ul>
 <li style="list-style: none"><input type="checkbox" checked> 每一个URI代表一种资源；</li>
 <li style="list-style: none"><input type="checkbox" checked> 客户端和服务器之间，传递这种资源的某种表现层；</li>
 <li style="list-style: none"><input type="checkbox" checked> 客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。</li>
 </ul>
 <a id="more"></a>
-<h3 id="RESTful原则："><a href="#RESTful原则：" class="headerlink" title="RESTful原则："></a>RESTful原则：</h3><ul>
+<h2 id="RESTful原则："><a href="#RESTful原则：" class="headerlink" title="RESTful原则："></a>RESTful原则：</h2><ul>
 <li style="list-style: none"><input type="checkbox" checked> API应该对程序员友好，并且在浏览器地址栏容易输入。</li>
 <li style="list-style: none"><input type="checkbox" checked> API应该简单，直观，容易使用的同时优雅。</li>
 <li style="list-style: none"><input type="checkbox" checked> API应该具有足够的灵活性来支持上层ui。</li>
 <li style="list-style: none"><input type="checkbox" checked> API设计权衡上述几个原则。</li>
 </ul>
-<h3 id="RESTfull例子："><a href="#RESTfull例子：" class="headerlink" title="RESTfull例子："></a>RESTfull例子：</h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">GET <span class="string">/tickets</span>        <span class="comment"># 获取ticket列表</span></div><div class="line">GET <span class="string">/tickets/12</span>     <span class="comment"># 查看某个具体的ticket</span></div><div class="line">POST <span class="string">/tickets</span>       <span class="comment"># 新建一个ticket</span></div><div class="line">PUT <span class="string">/tickets/12</span>     <span class="comment"># 更新ticket 12.</span></div><div class="line">DELETE <span class="string">/tickets/12</span>  <span class="comment">#删除ticekt 12</span></div></pre></td></tr></table></figure>
+<h2 id="RESTfull例子："><a href="#RESTfull例子：" class="headerlink" title="RESTfull例子："></a>RESTfull例子：</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">GET <span class="string">/tickets</span>        <span class="comment"># 获取ticket列表</span></div><div class="line">GET <span class="string">/tickets/12</span>     <span class="comment"># 查看某个具体的ticket</span></div><div class="line">POST <span class="string">/tickets</span>       <span class="comment"># 新建一个ticket</span></div><div class="line">PUT <span class="string">/tickets/12</span>     <span class="comment"># 更新ticket 12.</span></div><div class="line">DELETE <span class="string">/tickets/12</span>  <span class="comment">#删除ticekt 12</span></div></pre></td></tr></table></figure>
 <p>如何处理关联？关于如何处理资源之间的管理REST原则也有相关的描述：</p>
 <figure class="highlight delphi"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">GET /tickets/<span class="number">12</span>/messages- Retrieves list <span class="keyword">of</span> messages <span class="keyword">for</span> ticket <span class="string">#12</span></div><div class="line">GET /tickets/<span class="number">12</span>/messages/<span class="number">5</span>- Retrieves <span class="keyword">message</span> <span class="string">#5</span> <span class="keyword">for</span> ticket <span class="string">#12</span></div><div class="line">POST /tickets/<span class="number">12</span>/messages- Creates a new <span class="keyword">message</span> <span class="keyword">in</span> ticket <span class="string">#12</span></div><div class="line">PUT /tickets/<span class="number">12</span>/messages/<span class="number">5</span>- Updates <span class="keyword">message</span> <span class="string">#5</span> <span class="keyword">for</span> ticket <span class="string">#12</span></div><div class="line">PATCH /tickets/<span class="number">12</span>/messages/<span class="number">5</span>- Partially updates <span class="keyword">message</span> <span class="string">#5</span> <span class="keyword">for</span> ticket <span class="string">#12</span></div><div class="line">DELETE /tickets/<span class="number">12</span>/messages/<span class="number">5</span>- Deletes <span class="keyword">message</span> <span class="string">#5</span> <span class="keyword">for</span> ticket <span class="string">#12</span></div></pre></td></tr></table></figure>
-<h3 id="URL定位资源"><a href="#URL定位资源" class="headerlink" title="URL定位资源"></a>URL定位资源</h3><p>用HTTP动词（GET,POST,DELETE,DETC）描述操作，常用的HTTP动词有下面五个（括号里是对应的SQL命令）：</p>
+<h2 id="URL定位资源"><a href="#URL定位资源" class="headerlink" title="URL定位资源"></a>URL定位资源</h2><p>用HTTP动词（GET,POST,DELETE,DETC）描述操作，常用的HTTP动词有下面五个（括号里是对应的SQL命令）：</p>
 <ul>
 <li>GET（SELECT）：从服务器取出资源（一项或多项）。</li>
 <li>POST（CREATE）：在服务器新建一个资源。</li>
@@ -224,7 +224,7 @@ var _hmt = _hmt || [];
 </blockquote>
 <p>透明性，暴露资源存在。充分利用 HTTP 协议本身语义。无状态，这点非常重要。在调用一个接口（访问、操作资源）的时候，可以不用考虑上下文，不用考虑当前状态，极大的降低了复杂度HTTP 本身提供了丰富的内容协商手段，无论是缓存，还是资源修改的乐观并发控制，都可以以业务无关的中间件来实现。Web端和Server只使用上述定义的API来传递数据和改变数据状态。格式一般是JSON。由此可见，Web，iOS，Android和第三方开发者变为平等的角色通过一套API来共同消费Server提供的服务。</p>
 <p><img src="https://pic2.zhimg.com/50/06ee404783540f0af299042057738a99_hd.jpg" alt="image"></p>
-<h3 id="需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！"><a href="#需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！" class="headerlink" title="需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！"></a>需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！</h3><h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2014/05/restful_api.html</a><br><a href="http://blog.jobbole.com/41233/" target="_blank" rel="external">http://blog.jobbole.com/41233/</a></p>
+<h2 id="需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！"><a href="#需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！" class="headerlink" title="需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！"></a>需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！</h2><h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2014/05/restful_api.html</a><br><a href="http://blog.jobbole.com/41233/" target="_blank" rel="external">http://blog.jobbole.com/41233/</a></p>
 
       
 
@@ -358,7 +358,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#越来越多的人开始意识到，网站即软件"><span class="toc-number">1.</span> <span class="toc-text">越来越多的人开始意识到，网站即软件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RESTful架构："><span class="toc-number">2.</span> <span class="toc-text">RESTful架构：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RESTful原则："><span class="toc-number">3.</span> <span class="toc-text">RESTful原则：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RESTfull例子："><span class="toc-number">4.</span> <span class="toc-text">RESTfull例子：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#URL定位资源"><span class="toc-number">5.</span> <span class="toc-text">URL定位资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！"><span class="toc-number">6.</span> <span class="toc-text">需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考："><span class="toc-number">7.</span> <span class="toc-text">参考：</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#越来越多的人开始意识到，网站即软件"><span class="toc-number">1.</span> <span class="toc-text">越来越多的人开始意识到，网站即软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful架构："><span class="toc-number">2.</span> <span class="toc-text">RESTful架构：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful原则："><span class="toc-number">3.</span> <span class="toc-text">RESTful原则：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTfull例子："><span class="toc-number">4.</span> <span class="toc-text">RESTfull例子：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#URL定位资源"><span class="toc-number">5.</span> <span class="toc-text">URL定位资源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！"><span class="toc-number">6.</span> <span class="toc-text">需要强调的是：API的就是程序员的UI，和其他UI一样，你必须仔细考虑它的用户体验！</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考："><span class="toc-number">7.</span> <span class="toc-text">参考：</span></a></li></ol>
                     </div>
                 </span>
             </div>
