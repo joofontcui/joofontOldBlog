@@ -175,6 +175,241 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-bigdecimal" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/17/bigdecimal/">BigDecimal</a>
+    </h1>
+  
+
+        
+        <a href="/2017/12/17/bigdecimal/" class="archive-article-date">
+  	<time datetime="2017-12-16T16:25:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>float和Double只能用来做科学计算或者是工程计算;在商业计算中,对数字精度要求较高,必须使用 BigInteger 类和 BigDecimal 类</p>
+<p>构造 BigDecimal 对象常用以下方法: </p>
+<pre><code>BigDecimal BigDecimal(double d); //不允许使用  
+BigDecimal BigDecimal(String s); //常用,推荐使用  
+static BigDecimal valueOf(double d); //常用,推荐使用  
+</code></pre><table>
+<thead>
+<tr>
+<th>类型名称</th>
+<th>显示长度</th>
+<th>数据库类型</th>
+<th>JAVA类型</th>
+<th>JDBC类型索引(int)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VARCHAR</td>
+<td>L+N</td>
+<td>VARCHAR</td>
+<td>java.lang.String</td>
+<td>12</td>
+</tr>
+<tr>
+<td>CHAR</td>
+<td>N</td>
+<td>CHAR</td>
+<td>java.lang.String</td>
+<td>1</td>
+</tr>
+<tr>
+<td>BLOB</td>
+<td>L+N</td>
+<td>BLOB</td>
+<td>java.lang.byte[]</td>
+<td>-4</td>
+</tr>
+<tr>
+<td>TEXT</td>
+<td>65535</td>
+<td>VARCHAR</td>
+<td>java.lang.String</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>INTEGER</td>
+<td>4</td>
+<td>INTEGER UNSIGNED</td>
+<td>java.lang.Long</td>
+<td>4</td>
+</tr>
+<tr>
+<td>TINYINT</td>
+<td>3</td>
+<td>TINYINT UNSIGNED</td>
+<td>java.lang.Integer</td>
+<td>-6</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>5</td>
+<td>SMALLINT UNSIGNED</td>
+<td>java.lang.Integer</td>
+<td>5</td>
+</tr>
+<tr>
+<td>MEDIUMINT</td>
+<td>8</td>
+<td>MEDIUMINT UNSIGNED</td>
+<td>java.lang.Integer</td>
+<td>4</td>
+</tr>
+<tr>
+<td>BIT</td>
+<td>1</td>
+<td>BIT</td>
+<td>java.lang.Boolean</td>
+<td>-7</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>20</td>
+<td>BIGINT UNSIGNED</td>
+<td>java.math.BigInteger</td>
+<td>-5</td>
+</tr>
+<tr>
+<td>FLOAT</td>
+<td>4+8</td>
+<td>FLOAT</td>
+<td>java.lang.Float</td>
+<td>7</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>22</td>
+<td>DOUBLE</td>
+<td>java.lang.Double</td>
+<td>8</td>
+</tr>
+<tr>
+<td>DECIMAL</td>
+<td>11</td>
+<td>DECIMAL</td>
+<td>java.math.BigDecimal</td>
+<td>3</td>
+</tr>
+<tr>
+<td>BOOLEAN</td>
+<td>1</td>
+<td>同TINYINT</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ID</td>
+<td>11</td>
+<td>PK(INTEGER UNSIGNED)</td>
+<td>java.lang.Long</td>
+<td>4</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>10</td>
+<td>DATE</td>
+<td>java.sql.Date</td>
+<td>91</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>8</td>
+<td>TIME</td>
+<td>java.sql.Time</td>
+<td>92</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>19</td>
+<td>DATETIME</td>
+<td>java.sql.Timestamp</td>
+<td>93</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>19</td>
+<td>TIMESTAMP</td>
+<td>java.sql.Timestamp</td>
+<td>93</td>
+</tr>
+<tr>
+<td>YEAR</td>
+<td>4</td>
+<td>YEAR</td>
+<td>java.sql.Date</td>
+<td>91</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> BigDecimal <span class="title">add</span>(<span class="params">BigDecimal <span class="keyword">value</span></span>)</span>;        <span class="comment">//加法运算</span></div><div class="line"><span class="function"><span class="keyword">public</span> BigDecimal <span class="title">subtract</span>(<span class="params">BigDecimal <span class="keyword">value</span></span>)</span>;   <span class="comment">//减法运算</span></div><div class="line"><span class="function"><span class="keyword">public</span> BigDecimal <span class="title">multiply</span>(<span class="params">BigDecimal <span class="keyword">value</span></span>)</span>;   <span class="comment">//乘法运算</span></div><div class="line"><span class="function"><span class="keyword">public</span> BigDecimal <span class="title">divide</span> (<span class="params">BigDecimal <span class="keyword">value</span>,RoundingMode mode</span>)</span>;<span class="comment">//除法运算,第二个参数为精度</span></div></pre></td></tr></table></figure>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 求余数</span></div><div class="line"><span class="comment"> * 返回值为 (this % divisor) 的 BigDecimal</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">BigDecimal </span>remainder(<span class="keyword">BigDecimal </span><span class="keyword">divisor);</span></div><div class="line"><span class="keyword"></span></div><div class="line"><span class="keyword">/**</span></div><div class="line"><span class="keyword"> </span>* 求相反数</div><div class="line"> * 返回值是 (-this) 的 <span class="keyword">BigDecimal</span></div><div class="line"> */</div><div class="line"><span class="keyword">BigDecimal </span>negate()<span class="comment">;</span></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 将此 BigDecimal 与指定的 BigDecimal 比较</span></div><div class="line"><span class="comment"> * 根据此方法,值相等但具有不同标度的两个 BigDecimal 对象（如，2.0 和 2.00）被认为是相等的;</span></div><div class="line"><span class="comment"> * 相对六个 boolean 比较运算符 (&lt;, ==, &gt;, &gt;=, !=, &lt;=) 中每一个运算符的各个方法,优先提供此方法;</span></div><div class="line"><span class="comment"> * 建议使用以下语句执行上述比较：(x.compareTo(y) &lt;op&gt; 0), 其中 &lt;op&gt; 是六个比较运算符之一;</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 指定者：接口 Comparable&lt;BigDecimal&gt; 中的 compareTo</span></div><div class="line"><span class="comment"> * 返回：当此 BigDecimal 在数字上小于、等于或大于 val 时，返回 -1、0 或 1</span></div><div class="line"><span class="comment"> */</span></div><div class="line">int compareTo(<span class="keyword">BigDecimal </span>val)<span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="http://blog.csdn.net/wangjunjun2008/article/details/45559655" target="_blank" rel="external">http://blog.csdn.net/wangjunjun2008/article/details/45559655</a><br><a href="https://www.cnblogs.com/henuyuxiang/p/6676660.html" target="_blank" rel="external">https://www.cnblogs.com/henuyuxiang/p/6676660.html</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">BigDecimal</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/12/17/bigdecimal/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-gitAndGitflow" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1016,6 +1251,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SVN</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">BigDecimal</a>
               </li>
              
               <li class="article-tag-list-item">
