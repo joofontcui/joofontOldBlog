@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="//www.joofont.com">
   <title>git &amp; gitflow | 崔俊的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="git标签：git tag -a v0.1.2 -m “0.1.2版本” # 创建附注标签 git tag # 在控制台打印出当前仓库的所有标签 git push origin [tagname]">
+  <meta name="description" content="git标签git tag -a v0.1.2 -m “0.1.2版本” # 创建附注标签 git tag # 在控制台打印出当前仓库的所有标签 git push origin [tagname]">
 <meta name="keywords" content="git、gitflow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="git &amp; gitflow">
 <meta property="og:url" content="//www.joofont.com/2017/12/16/gitAndGitflow/index.html">
 <meta property="og:site_name" content="崔俊的博客">
-<meta property="og:description" content="git标签：git tag -a v0.1.2 -m “0.1.2版本” # 创建附注标签 git tag # 在控制台打印出当前仓库的所有标签 git push origin [tagname]">
+<meta property="og:description" content="git标签git tag -a v0.1.2 -m “0.1.2版本” # 创建附注标签 git tag # 在控制台打印出当前仓库的所有标签 git push origin [tagname]">
 <meta property="og:image" content="http://static.zybuluo.com/coder-pig/tnrou2ko873bpu0bbqfgs3bh/image_1b3n9nobjcfp1f6b1tb71k1hp7u13.png">
 <meta property="og:image" content="https://github.com/oldratlee/translations/raw/master/git-workflows-and-tutorials/images/git-workflow-release-cycle-4maintenance.png">
-<meta property="og:updated_time" content="2017-12-16T15:51:37.796Z">
+<meta property="og:updated_time" content="2017-12-16T16:02:32.891Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git &amp; gitflow">
-<meta name="twitter:description" content="git标签：git tag -a v0.1.2 -m “0.1.2版本” # 创建附注标签 git tag # 在控制台打印出当前仓库的所有标签 git push origin [tagname]">
+<meta name="twitter:description" content="git标签git tag -a v0.1.2 -m “0.1.2版本” # 创建附注标签 git tag # 在控制台打印出当前仓库的所有标签 git push origin [tagname]">
 <meta name="twitter:image" content="http://static.zybuluo.com/coder-pig/tnrou2ko873bpu0bbqfgs3bh/image_1b3n9nobjcfp1f6b1tb71k1hp7u13.png">
   
     <link rel="alternative" href="/atom.xml" title="崔俊的博客" type="application/atom+xml">
@@ -197,25 +197,26 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="git"><a href="#git" class="headerlink" title="git"></a>git</h2><h4 id="标签："><a href="#标签：" class="headerlink" title="标签："></a>标签：</h4><pre><code>git tag -a v0.1.2 -m “0.1.2版本” # 创建附注标签
+        <h2 id="git"><a href="#git" class="headerlink" title="git"></a>git</h2><h4 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h4><pre><code>git tag -a v0.1.2 -m “0.1.2版本” # 创建附注标签
 git tag # 在控制台打印出当前仓库的所有标签
 git push origin [tagname]
-</code></pre><h4 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h4><h4 id="查看提交的命令"><a href="#查看提交的命令" class="headerlink" title="查看提交的命令"></a>查看提交的命令</h4><pre><code>git reflog 
+</code></pre><a id="more"></a>
+<h4 id="查看提交的命令"><a href="#查看提交的命令" class="headerlink" title="查看提交的命令"></a>查看提交的命令</h4><pre><code>git reflog 
 </code></pre><h4 id="分支向后回退了两个提交"><a href="#分支向后回退了两个提交" class="headerlink" title="分支向后回退了两个提交"></a>分支向后回退了两个提交</h4><pre><code>git reset HEAD~2
 </code></pre><h4 id="文件恢复-已add未commit"><a href="#文件恢复-已add未commit" class="headerlink" title="文件恢复(已add未commit)"></a>文件恢复(已add未commit)</h4><pre><code>git reset HEAD xxx.java # 就是对某个文件进行撤销了
 git reset HEAD #上一次add 里面的全部撤销了
 </code></pre><h4 id="版本回退-已commit"><a href="#版本回退-已commit" class="headerlink" title="版本回退(已commit)"></a>版本回退(已commit)</h4><p>git reset HEAD^ # 恢复成上次提交的版本<br>git reset HEAD^^ # 恢复成上上次提交的版本，就是多个^，以此类推或用~次数<br>git reset –hard 版本号 # git log查看到的SHA1值，取前七位即可，根据版本号回退</p>
-<h4 id="git-commit后发现分支错了，"><a href="#git-commit后发现分支错了，" class="headerlink" title="git commit后发现分支错了，"></a>git commit后发现分支错了，</h4><ul>
+<h4 id="git-commit后发现分支错了"><a href="#git-commit后发现分支错了" class="headerlink" title="git commit后发现分支错了"></a>git commit后发现分支错了</h4><ul>
 <li style="list-style: none"><input type="checkbox" checked> git log查看下commit前的版本号，使用git reset –soft &lt;哈希值&gt;，这样上次的提交都会回到暂存区，切分支再次提交就可以了。</li>
 <li style="list-style: none"><input type="checkbox" checked> git log拿到commit的版本号，切换分支，git cherry-pick 版本号，处理冲突再次提交就可以了。</li>
 </ul>
-<h4 id="突发的情况需要暂时切换到其他分支上"><a href="#突发的情况需要暂时切换到其他分支上" class="headerlink" title="突发的情况需要暂时切换到其他分支上:"></a>突发的情况需要暂时切换到其他分支上:</h4><pre><code>git stash # 保存当前的改动
+<h4 id="突发的情况需要暂时切换到其他分支上"><a href="#突发的情况需要暂时切换到其他分支上" class="headerlink" title="突发的情况需要暂时切换到其他分支上"></a>突发的情况需要暂时切换到其他分支上</h4><pre><code>git stash # 保存当前的改动
 git stash list # 查看stash列表
 git stash apply stash@{0}
 </code></pre><blockquote>
 <p>注：这个时候原来的暂存区中的内容会清空</p>
 </blockquote>
-<h4 id="删除本地分支："><a href="#删除本地分支：" class="headerlink" title="删除本地分支："></a>删除本地分支：</h4><pre><code>git branch -d some-feature
+<h4 id="删除本地分支"><a href="#删除本地分支" class="headerlink" title="删除本地分支"></a>删除本地分支</h4><pre><code>git branch -d some-feature
 </code></pre><h2 id="git流程简述"><a href="#git流程简述" class="headerlink" title="git流程简述"></a>git流程简述</h2><blockquote>
 <p>1.新建一个文件，该文件处于 Untracked 状态；<br>2.通过git add命令添加到缓存区，此时文件处于Tracked状态又或者说<br>此时这个文件已经被版本控制系统所跟踪，而且他处于Staged(暂存)状态；<br>3.通过git commit命令把暂存区的文件提交提交到本地仓库，此时文件<br>处于Unmodified(未修改)状态；<br>4.此时如果去编辑这个文件，文件又会变成Modified(修改)状态； </p>
 </blockquote>
@@ -365,7 +366,7 @@ git stash apply stash@{0}
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git"><span class="toc-number">1.</span> <span class="toc-text">git</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#标签："><span class="toc-number">1.0.1.</span> <span class="toc-text">标签：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#"><span class="toc-number">1.0.2.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看提交的命令"><span class="toc-number">1.0.3.</span> <span class="toc-text">查看提交的命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分支向后回退了两个提交"><span class="toc-number">1.0.4.</span> <span class="toc-text">分支向后回退了两个提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件恢复-已add未commit"><span class="toc-number">1.0.5.</span> <span class="toc-text">文件恢复(已add未commit)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本回退-已commit"><span class="toc-number">1.0.6.</span> <span class="toc-text">版本回退(已commit)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#git-commit后发现分支错了，"><span class="toc-number">1.0.7.</span> <span class="toc-text">git commit后发现分支错了，</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#突发的情况需要暂时切换到其他分支上"><span class="toc-number">1.0.8.</span> <span class="toc-text">突发的情况需要暂时切换到其他分支上:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除本地分支："><span class="toc-number">1.0.9.</span> <span class="toc-text">删除本地分支：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git流程简述"><span class="toc-number">2.</span> <span class="toc-text">git流程简述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#commit时仓库中的数据结构"><span class="toc-number">3.</span> <span class="toc-text">commit时仓库中的数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gitflow"><span class="toc-number">4.</span> <span class="toc-text">gitflow</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git"><span class="toc-number">1.</span> <span class="toc-text">git</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#标签"><span class="toc-number">1.0.1.</span> <span class="toc-text">标签</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看提交的命令"><span class="toc-number">1.0.2.</span> <span class="toc-text">查看提交的命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分支向后回退了两个提交"><span class="toc-number">1.0.3.</span> <span class="toc-text">分支向后回退了两个提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件恢复-已add未commit"><span class="toc-number">1.0.4.</span> <span class="toc-text">文件恢复(已add未commit)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本回退-已commit"><span class="toc-number">1.0.5.</span> <span class="toc-text">版本回退(已commit)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#git-commit后发现分支错了"><span class="toc-number">1.0.6.</span> <span class="toc-text">git commit后发现分支错了</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#突发的情况需要暂时切换到其他分支上"><span class="toc-number">1.0.7.</span> <span class="toc-text">突发的情况需要暂时切换到其他分支上</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除本地分支"><span class="toc-number">1.0.8.</span> <span class="toc-text">删除本地分支</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git流程简述"><span class="toc-number">2.</span> <span class="toc-text">git流程简述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#commit时仓库中的数据结构"><span class="toc-number">3.</span> <span class="toc-text">commit时仓库中的数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gitflow"><span class="toc-number">4.</span> <span class="toc-text">gitflow</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
                     </div>
                 </span>
             </div>
